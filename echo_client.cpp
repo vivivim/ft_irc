@@ -32,22 +32,31 @@ int main() {
     std::cout << "Connected to server\n";
 
     // 메시지 전송
-    char message[BUFFER_SIZE] = "Hello, server!";
-    if (send(client_socket, message, strlen(message), 0) < 0) {
-        std::cerr << "Error: Send failed\n";
-        return EXIT_FAILURE;
-    }
-    std::cout << "Message sent to server\n";
+    char message[BUFFER_SIZE];
+	
+	while (1)
+	{
+		std::cout << "Input message : ";
+		std::cin.getline(message, BUFFER_SIZE);
 
-    // 서버로부터 응답 받기
-    char buffer[BUFFER_SIZE] = {0};
-    int valread = read(client_socket, buffer, BUFFER_SIZE);
-    if (valread < 0) {
-        std::cerr << "Error: Read failed\n";
-        return EXIT_FAILURE;
-    }
 
-    std::cout << "Message from server: " << buffer << std::endl;
+	    if (send(client_socket, message, strlen(message), 0) < 0) {
+    	    std::cerr << "Error: Send failed\n";
+        	return EXIT_FAILURE;
+    	}
+		
+    	std::cout << "Message sent to server\n";
+
+    	// 서버로부터 응답 받기
+  		char buffer[BUFFER_SIZE] = {0};
+	    int valread = read(client_socket, buffer, BUFFER_SIZE);
+    	if (valread < 0) {
+        	std::cerr << "Error: Read failed\n";
+	        return EXIT_FAILURE;
+    	}
+
+   		std::cout << "Message from server: " << buffer << std::endl;
+	}
 
     // 소켓 닫기
     close(client_socket);

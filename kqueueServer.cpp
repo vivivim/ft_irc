@@ -16,7 +16,7 @@
 const int PORT = 8080;
 const int BUFFER_SIZE = 1024;
 
-void ChangeEvents(std::vector<struct kevent>& changeList, uintptr_t ident, int16_t filter, uint16_t flags, uint32_t fflags, intptr_t data, void *udata)
+void changeEvents(std::vector<struct kevent>& changeList, uintptr_t ident, int16_t filter, uint16_t flags, uint32_t fflags, intptr_t data, void *udata)
 {
     struct kevent tempEvent;
     EV_SET(&tempEvent, ident, filter, flags, fflags, data, udata);
@@ -73,7 +73,7 @@ int main()
     std::vector<struct kevent> changeList;
     struct kevent eventList[8];
 
-    ChangeEvents(changeList, serverSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
+    changeEvents(changeList, serverSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
     std::cout << "Echo server with kqueue started '-'" << std::endl;
 
     int newEvents;
@@ -81,6 +81,7 @@ int main()
 
     while (1)
     {
+
         newEvents = kevent(kq, &changeList[0], changeList.size(), eventList, 8, NULL);
         if (newEvents == -1)
         {
@@ -104,7 +105,15 @@ int main()
                 if (currEvent->ident == serverSocket)
                 {
                     std::cout << "Welcome new client\n";
-                }
+                	int clientSocket = accept(serverSocket, NULL, NULL);
+					if (clientSocket < 0)
+						std::cerr << "Error: Accept failed\n";
+					std::cout << "Accept client socket " << clientSocket << std::endl;
+					fcntl(clientSocket, F_SETFL, O_NONBLOCK);
+					changeEvents(changeList, clientSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
+					changeEvents(changeList, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);
+					clients[clientSocket] = "";
+				}
                 else if (clients.find(currEvent->ident) != clients.end())
                 {
                     char buf[BUFFER_SIZE];
