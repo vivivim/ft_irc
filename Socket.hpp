@@ -1,8 +1,6 @@
 #ifndef SOCKET_HPP
 # define SOCKET_HPP
 
-# include <>
-
 class	Socket {
 	private:
 		int	socket;
@@ -11,8 +9,11 @@ class	Socket {
 		Socket();
 		~Socket();
 
-		void	bind();
+		void	create();
+		void	bind(int port);
 		void	listen();
+
+		int		getSocket();
 };
 
 #endif

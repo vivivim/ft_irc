@@ -1,17 +1,31 @@
 #include "Socket.hpp"
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <stdexcept>
+#include <unistd.h>
 
 Socket::Socket()
 {
-	this->socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (this->socket == -1)
-		throw	std::runtime_error("Could not create socket");
+//	this->socket = socket(AF_INET, SOCK_STREAM, 0);
+//	if (this->socket == -1)
+//		throw	std::runtime_error("Could not create socket");
 }
 
 Socket::~Socket()
 {
+	close(socket);
 }
 
-Socket::bind(int port)
+int		Socket::getSocket() { return socket; }
+
+void	Socket::create()
+{
+	this->socket = ::socket(AF_INET, SOCK_STREAM, 0);
+	if (this->socket < 0)
+		throw	std::runtime_error("Could not create socket");
+}
+
+void	Socket::bind(int port)
 {
 	sockaddr_in	serverAddress;
 
@@ -22,8 +36,8 @@ Socket::bind(int port)
 		throw	std::runtime_error("Bind failed");
 }
 
-Socket::listen()
+void	Socket::listen()
 {
-	if (listen(this->socket, 5) < 0)
+	if (::listen(this->socket, 5) < 0)
 		throw	std::runtime_error("Listen failed");
 }

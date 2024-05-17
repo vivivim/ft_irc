@@ -1,4 +1,6 @@
-#include ""
+#include "Server.hpp"
+#include <iostream>
+#include <stdexcept>
 
 int	main(int argc, char **argv)
 {
@@ -13,9 +15,8 @@ int	main(int argc, char **argv)
 		std::cout << "IRC server si listening on port " << server.getPort() << std::endl;
 		server.run();
 	}
-	catch (const std::string *errMsg) {
-		//Or std::exception ?
-		std::cerr << errMsg << std::endl;
+	catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
 	}
 	return 0;
 }
