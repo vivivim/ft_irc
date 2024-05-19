@@ -9,7 +9,8 @@ private:
 	std::string	msg;
 
 public:
-
+	Response();
+	~Response();
 };
 
 #endif

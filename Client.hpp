@@ -3,16 +3,15 @@
 
 # include <string>
 # include <map>
-
-class Channel;
+// #include "Channel.hpp"
 
 class	Client {
 	private:
 		int								fd;
 		std::string						msg;
-		std::string						nick;
-		std::string						username;
-		std::map<std::string, Channel>	channels;
+		// std::string						nick;
+		// std::string						username;
+		// std::map<std::string, Channel>	channels;
 
 	public:
 		Client();

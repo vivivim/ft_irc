@@ -81,7 +81,7 @@ void	Server::run()
 					getClientMsg(currEvent->ident);
 			}
 			else if (currEvent->filter == EVFILT_WRITE)
-				sendResponseMsg();
+				sendResponseMsg(currEvent->ident);
 		}
 	}
 }
@@ -123,7 +123,7 @@ void	Server::getClientMsg(int currFd)
 	}
 }
 
-void	sendResponseMsg(int currFd)
+void	Server::sendResponseMsg(int currFd)
 {
 	std::map<int, Client>::iterator it = clients.find(currFd);
 	Client currClient = it->second;
