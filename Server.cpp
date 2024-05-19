@@ -116,10 +116,15 @@ void	Server::getClientMsg(int currFd)
 		}
 		else
 		{
+			while (strstr(buf, "\r\n\r\n"))
+			{ //no crlf
+				it->second.attachMsg(buf);
+				n = recv(currFd, buf, sizeof(buf), 0);
+			}
 			buf[n] = '\0';
 			it->second.attachMsg(buf);
 		}
-		//go parsing??
+		//go parsing(it->getMsg());
 	}
 }
 
