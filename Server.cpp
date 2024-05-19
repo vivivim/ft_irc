@@ -126,7 +126,7 @@ void	Server::getClientMsg(int currFd)
 void	Server::sendResponseMsg(int currFd)
 {
 	std::map<int, Client>::iterator it = clients.find(currFd);
-	Client currClient = it->second;
+	Client& currClient = it->second;
 	if (it != clients.end())
 	{
 		if (!currClient.getMsg().empty())
