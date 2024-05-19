@@ -3,8 +3,12 @@
 
 # include "Socket.hpp"
 # include "Client.hpp"
+# include "Channel.hpp"
+# include "Response.hpp"
 # include <string>
+# include <map>
 # include <vector>
+# include <queue>
 # include <sys/event.h>
 
 class	Server {
@@ -12,12 +16,15 @@ class	Server {
 		int			port;
 		std::string	pwd;
 
-		int					kq;
-		Socket				socket;
-		std::vector<Client>	clients;
-//		ServerManager		serverManager;
+		int						kq;
 		std::vector<struct kevent>	changeList;
 		struct kevent		eventList[8];
+		Socket					socket;
+
+		std::map<int, Client>	clients;
+		std::map<int, Channel>	channels;
+		std::queue<Response>	responses;
+		time_t					createdTime;
 
 	public:
 		Server();
@@ -27,11 +34,9 @@ class	Server {
 		void	create();
 		void	run();
 		void	changeEvents(std::vector<struct kevent>& changeList, uintptr_t ident, int16_t filter, uint16_t flags, uint32_t fflags, intptr_t data, void *udata);
-		std::vector<Client>::iterator	find(int socketClient);
-		void	disconnectClient(std::vector<Client>::iterator it);
+		void	disconnectClient(int key);
 		
 		int		getPort();
 };
-		
 
 #endif

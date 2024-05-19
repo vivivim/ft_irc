@@ -32,9 +32,10 @@ Server::Server(char *port, char *pwd)
 
 Server::~Server()
 {
-	std::vector<Client>::iterator	it;
+	std::map<int, Client>::iterator it;
+
 	for (it = clients.begin(); it != clients.end(); ++it)
-		close(it->getFd());
+		close(it->second.getFd());
 	clients.clear();
 }
 
@@ -50,9 +51,9 @@ void	Server::create()
 
 void Server::changeEvents(std::vector<struct kevent>& changeList, uintptr_t ident, int16_t filter, uint16_t flags, uint32_t fflags, intptr_t data, void *udata)
 {
-    struct kevent tempEvent;
-    EV_SET(&tempEvent, ident, filter, flags, fflags, data, udata);
-    changeList.push_back(tempEvent);
+	struct kevent tempEvent;
+	EV_SET(&tempEvent, ident, filter, flags, fflags, data, udata);
+	changeList.push_back(tempEvent);
 }
 
 void	Server::run()
@@ -63,7 +64,7 @@ void	Server::run()
 	changeEvents(changeList, socket.getSocket(), EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
 
 	int newEvents;
-    struct kevent *currEvent;
+	struct kevent *currEvent;
 	while (1)
 	{
 		newEvents = kevent(kq, &changeList[0], changeList.size(), eventList, 8, NULL);
@@ -74,8 +75,8 @@ void	Server::run()
 		changeList.clear();
 
 		for (int i = 0; i < newEvents; ++i)
-        {
-            currEvent = &eventList[i];
+		{
+			currEvent = &eventList[i];
 			if (currEvent->flags & EV_ERROR)
 			{
 				std::cerr << "current event error" << std::endl;
@@ -93,11 +94,12 @@ void	Server::run()
 					changeEvents(changeList, clientSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
 					changeEvents(changeList, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);
 					Client	freshClient(clientSocket, "");
-					clients.push_back(freshClient);
+					clients[clientSocket] = freshClient;
 				}
 				else
 				{
-					std::vector<Client>::iterator	it = Server::find(currEvent->ident);
+					std::map<int, Client>::iterator it = clients.find(currEvent->ident);
+					Client currClient = it->second;
 					if (it != clients.end())
 					{
 						char	buf[1024];
@@ -106,32 +108,33 @@ void	Server::run()
 						{
 							if (n < 0)
 								std::cerr << "Error: Client socket has problem\n";
-							disconnectClient(it);
+							disconnectClient(currEvent->ident);
 						}
 						else
 						{
 							buf[n] = '\0';
-							it->attachMsg(buf);
+							currClient.attachMsg(buf);
 						}
 					}
 				}
 			}
 			else if (currEvent->filter == EVFILT_WRITE)
 			{
-				std::vector<Client>::iterator it = find(currEvent->ident);
+				std::map<int, Client>::iterator it = clients.find(currEvent->ident);
+				Client currClient = it->second;
 				if (it != clients.end())
 				{
-					if (!it->getMsg().empty())
+					if (!currClient.getMsg().empty())
 					{
-						int n = send(currEvent->ident, it->getMsg().c_str(), it->getMsg().size(), 0);
+						int n = send(currEvent->ident, currClient.getMsg().c_str(), currClient.getMsg().size(), 0);
 						if (n < 0)
 						{
 							std::cerr << "Error: Write failed\n";
-							disconnectClient(it);
+							disconnectClient(currEvent->ident);
 						}
 						else
 						{
-							it->setMsg("");
+							currClient.setMsg("");
 						}
 					}
 				}
@@ -140,21 +143,10 @@ void	Server::run()
 	}
 }
 
-std::vector<Client>::iterator	Server::find(int socketClient)
+void	Server::disconnectClient(int key)
 {
-	std::vector<Client>::iterator	it = clients.begin();
-	for (; it != clients.end(); ++it)
-	{
-		if (it->getFd() == socketClient)
-			break ;
-	}
-	return it;
-}
-
-void	Server::disconnectClient(std::vector<Client>::iterator it)
-{
-	close(it->getFd());
-	clients.erase(it);
+	close(key);
+	clients.erase(key);
 }
 
 int		Server::getPort() { return port; }

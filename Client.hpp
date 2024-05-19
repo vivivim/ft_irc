@@ -2,12 +2,17 @@
 # define CLIENT_HPP
 
 # include <string>
+# include <map>
+
+class Channel;
 
 class	Client {
 	private:
-		int			fd;
-		std::string	msg;
-		//channel info
+		int								fd;
+		std::string						msg;
+		std::string						nick;
+		std::string						username;
+		std::map<std::string, Channel>	channels;
 
 	public:
 		Client();

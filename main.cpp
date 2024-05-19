@@ -12,7 +12,7 @@ int	main(int argc, char **argv)
 	try {
 		Server	server(argv[1], argv[2]);
 		server.create();
-		std::cout << "IRC server si listening on port " << server.getPort() << std::endl;
+		std::cout << "IRC server is listening on port " << server.getPort() << std::endl;
 		server.run();
 	}
 	catch (const std::exception& e) {
