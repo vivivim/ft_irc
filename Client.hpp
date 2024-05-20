@@ -23,8 +23,14 @@ class	Client {
 		
 		void		setMsg(std::string msg);
 		void		attachMsg(std::string msg);
+		void		setIsPass(bool TF);
+		void		setIsUserName(bool TF);
+		void		setUserName(std::string input);
+
 		std::string getMsg();
 		int			getFd();
+		bool		getIsPass();
+		bool		getIsUsername();
 };
 
 #endif
