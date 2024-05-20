@@ -1,7 +1,5 @@
 #include "Command.hpp"
 #include "Client.hpp"
-#include <string>
-#include <sstream>
 #include <set>
 
 void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clients)
@@ -12,8 +10,7 @@ void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clien
 	std::string oldNick = currClient.getNick();
 	std::string cmd;
 	std::string nick;
-	ss >> cmd;
-	if (ss.eof())
+	if (!(ss >> cmd))
 	{
 		// ERR_NONICKNAMEGIVEN + oldNick + ERR_NONICKNAMEGIVEN_MSG (:irc.local 431 abc :No nickname given)
 		return;
@@ -30,10 +27,10 @@ void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clien
 			// ERR_NICKNAMEINUSE + oldNcik + nick + ERR_NICKNAMEINUSE_MSG (:irc.local 433 origin nick :Nickname is already in use.)
 			return;
 		}
-
 	}
 
-	std::set<char> charSet = {':', '#'};
+	char elements[] = { ':', '#' };
+	std::set<char> charSet(elements, elements + 2);
 	for (size_t i = 0; i < nick.size(); ++i) {
 		if (charSet.find(nick[i]) != charSet.end())
 		{

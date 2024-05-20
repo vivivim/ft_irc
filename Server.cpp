@@ -107,7 +107,7 @@ void	Server::getClientMsg(int currFd)
 	std::map<int, Client>::iterator it = clients.find(currFd);
 	if (it != clients.end())
 	{
-		char	buf[1024];
+		char	buf[40000];
 		int n = recv(currFd, buf, sizeof(buf), 0);
 		if (n <= 0)
 		{
@@ -117,14 +117,10 @@ void	Server::getClientMsg(int currFd)
 		}
 		else
 		{
-			while (strstr(buf, "\r\n\r\n"))
-			{ //no crlf
-				it->second.attachMsg(buf);
-				n = recv(currFd, buf, sizeof(buf), 0);
-			}
 			buf[n] = '\0';
 			it->second.attachMsg(buf);
 		}
+		std::cout << it->second.getMsg() << std::endl;
 		letsGoParsing(it->second);
 	}
 }

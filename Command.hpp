@@ -7,9 +7,9 @@
 # include <string>
 # include <map>
 
-void	pass(std::stringstream& ss, std::string pwd, Client currClient);
-void	user(std::stringstream& ss, Client currClient);
-void	nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clients);
+void	pass(std::stringstream& ss, std::string pwd, Client& currClient);
+void	user(std::stringstream& ss, Client& currClient);
+void	nick(std::stringstream& ss, Client& currClient, std::map<int, Client> clients);
 void	join();
 void	privmsg();
 void	exit();

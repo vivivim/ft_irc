@@ -1,3 +1,4 @@
+#include "Command.hpp"
 #include "Client.hpp"
 #include "Config.h"
 
@@ -6,13 +7,19 @@ void	user(std::stringstream& ss, Client& currClient)
 	if (currClient.getIsPass())
 		return ;
 	if (currClient.getIsUsername())
-		ERR_ALREADYREGISTERED(462);
+	{
+		// ERR_ALREADYREGISTERED(462);
+		return ;
+	}
 
 	std::string	input;
 	if (!(ss >> input))
-		ERR_NEEDMOREPARAMS(461);
+	{
+		// ERR_NEEDMOREPARAMS(461);
+		return ;
+	}
 	if (input.size() > USERLEN)
 		input = input.substr(0, 10);
-	CurrClient.setUsername(input);
+	currClient.setUsername(input);
 	currClient.setIsUsername(true);
 }

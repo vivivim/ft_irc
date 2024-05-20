@@ -3,7 +3,7 @@ CXXFLAGS = -std=c++98 -Wall -Wextra -Werror
 # CXXFLAGS = -std=c++98
 NAME = ircserv
 
-SRC = main.cpp Server.cpp Socket.cpp Client.cpp Channel.cpp Response.cpp
+SRC = main.cpp Server.cpp Socket.cpp Client.cpp Channel.cpp Response.cpp nick.cpp pass.cpp user.cpp
 OBJS = $(SRC:.cpp=.o)
 RM = rm -f
 
