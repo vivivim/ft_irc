@@ -7,11 +7,14 @@
 
 class	Client {
 	private:
-		int								fd;
-		std::string						msg;
-		// std::string						nick;
-		// std::string						username;
+		int									fd;
+		std::string							msg;
+		std::string							nick;
+		std::string							username;
 		// std::map<std::string, Channel>	channels;
+
+		bool								isPass;
+		bool								isUsername;
 
 	public:
 		Client();
