@@ -20,7 +20,7 @@ class	Client {
 		
 		void		setMsg(std::string msg);
 		void		attachMsg(std::string msg);
-		void		setNick(std::string nick));
+		void		setNick(std::string nick);
 		std::string	getMsg();
 		int			getFd();
 		std::string	getNick();

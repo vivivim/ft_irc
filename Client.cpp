@@ -4,7 +4,7 @@ Client::Client()
 {
 }
 
-Client::Client(int socket, std::string msg) : fd(socket), msg(msg)
+Client::Client(int socket, std::string msg) : fd(socket), msg(msg), nick("new_")
 {
 }
 
