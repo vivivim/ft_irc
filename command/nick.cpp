@@ -4,7 +4,7 @@
 #include <sstream>
 #include <set>
 
-void nick(std::stringstream ss, Client &currClient, std::map<int, Client> clients)
+void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clients)
 {
 	if (currClient.getIsPass() == false)
 		return;
@@ -43,5 +43,6 @@ void nick(std::stringstream ss, Client &currClient, std::map<int, Client> client
 	}
 
 	currClient.setNick(nick);
+	currClient.setIsNick(true);
 	// oldNick + "!" + root@127.0.0.1 + " NICK :" + nick
 }

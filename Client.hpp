@@ -15,6 +15,7 @@ class	Client {
 
 		bool								isPass;
 		bool								isUsername;
+		bool								isNick;
 
 	public:
 		Client();
@@ -25,9 +26,10 @@ class	Client {
 		void		attachMsg(std::string msg);
 		void		setIsPass(bool TF);
 		void		setIsUserName(bool TF);
+		void		setIsNick(bool TF);
 		void		setUserName(std::string input);
-    void		setNick(std::string nick);
-  
+		void		setNick(std::string nick);
+
 		std::string getMsg();
 		int			getFd();
 		bool		getIsPass();

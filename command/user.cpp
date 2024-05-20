@@ -1,7 +1,7 @@
 #include "Client.hpp"
 #include "Config.h"
 
-void	user(std::stringstream ss, Client& currClient)
+void	user(std::stringstream& ss, Client& currClient)
 {
 	if (currClient.getIsPass())
 		return ;

@@ -17,8 +17,8 @@ void	Client::setMsg(std::string msg) { this->msg = msg; }
 void	Client::attachMsg(std::string msg) { this->msg += msg; }
 void	Client::setIsPass(bool TF) { this->isPass = TF; }
 void	Client::setIsUserName(bool TF) { this->isUsername = TF; }
+void	Client::setIsNick(bool TF)  { this->isNick = TF; }
 void	Client::setUserName(std::string input) { this->username = input; }
-
 void	Client::setNick(std::string nick)
 {
 	this->nick = nick;

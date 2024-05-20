@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Command.hpp"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
@@ -131,22 +132,20 @@ void	Server::getClientMsg(int currFd)
 void	Server::letsGoParsing(Client& currClient)
 {
 	std::istringstream	iss(currClient.getMsg());
-    std::string line;
+	std::string line;
 	std::string	cmd;
-    
-    while (std::getline(iss, line))
+
+	while (std::getline(iss, line))
 	{
 		std::stringstream	ss(line);
 		ss >> cmd;
 		if (cmd == "PASS")
-		{
 			pass(ss, pwd, currClient);
-		}
 		else if (cmd == "USER")
 			user(ss, currClient);
 		else if (cmd == "NICK")
-			nick(ss, currClient);
-    }
+			nick(ss, currClient, clients);
+	}
 }
 
 void	Server::sendResponseMsg(int currFd)

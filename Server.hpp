@@ -38,6 +38,7 @@ class	Server {
 		void	welcomeNewClient();
 		void	getClientMsg(int currFd);
 		void	sendResponseMsg(int currFd);
+		void	letsGoParsing(Client& currClient);
 		
 		int		getPort();
 };
