@@ -124,8 +124,29 @@ void	Server::getClientMsg(int currFd)
 			buf[n] = '\0';
 			it->second.attachMsg(buf);
 		}
-		//go parsing(it->getMsg());
+		letsGoParsing(it->second);
 	}
+}
+
+void	Server::letsGoParsing(Client& currClient)
+{
+	std::istringstream	iss(currClient.getMsg());
+    std::string line;
+	std::string	cmd;
+    
+    while (std::getline(iss, line))
+	{
+		std::stringstream	ss(line);
+		ss >> cmd;
+		if (cmd == "PASS")
+		{
+			pass(ss, pwd, currClient);
+		}
+		else if (cmd == "USER")
+			user(ss, currClient);
+		else if (cmd == "NICK")
+			nick(ss, currClient);
+    }
 }
 
 void	Server::sendResponseMsg(int currFd)
