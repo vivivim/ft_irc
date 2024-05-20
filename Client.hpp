@@ -9,7 +9,7 @@ class	Client {
 	private:
 		int								fd;
 		std::string						msg;
-		// std::string						nick;
+		std::string						nick;
 		// std::string						username;
 		// std::map<std::string, Channel>	channels;
 
@@ -20,8 +20,10 @@ class	Client {
 		
 		void		setMsg(std::string msg);
 		void		attachMsg(std::string msg);
-		std::string getMsg();
+		void		setNick(std::string nick));
+		std::string	getMsg();
 		int			getFd();
+		std::string	getNick();
 };
 
 #endif
