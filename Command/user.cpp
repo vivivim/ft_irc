@@ -1,6 +1,6 @@
-#include "Command.hpp"
-#include "Client.hpp"
-#include "Config.h"
+#include "../Command/Command.hpp"
+#include "../Client/Client.hpp"
+#include "../Utils/Config.h"
 
 void	user(std::stringstream& ss, Client& currClient)
 {

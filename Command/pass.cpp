@@ -1,5 +1,5 @@
-#include "Command.hpp"
-#include "Client.hpp"
+#include "../Command/Command.hpp"
+#include "../Client/Client.hpp"
 
 void	pass(std::stringstream& ss, std::string pwd, Client& currClient)
 {

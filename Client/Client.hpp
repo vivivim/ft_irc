@@ -3,7 +3,7 @@
 
 # include <string>
 # include <map>
-// #include "Channel.hpp"
+// #include "../Channel/Channel.hpp"
 
 class	Client {
 	private:

@@ -1,5 +1,5 @@
 #include "Server.hpp"
-#include "Command.hpp"
+#include "../Command/Command.hpp"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>

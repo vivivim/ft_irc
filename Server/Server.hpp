@@ -1,10 +1,10 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# include "Socket.hpp"
-# include "Client.hpp"
-# include "Channel.hpp"
-# include "Response.hpp"
+# include "../Socket/Socket.hpp"
+# include "../Client/Client.hpp"
+# include "../Channel/Channel.hpp"
+# include "../Response/Response.hpp"
 # include <string>
 # include <map>
 # include <vector>

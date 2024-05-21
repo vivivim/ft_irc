@@ -1,9 +1,17 @@
 CXX = c++
 CXXFLAGS = -std=c++98 -Wall -Wextra -Werror
-# CXXFLAGS = -std=c++98
 NAME = ircserv
 
-SRC = main.cpp Server.cpp Socket.cpp Client.cpp Channel.cpp Response.cpp nick.cpp pass.cpp user.cpp
+CMDDIR = ./Command/
+
+SRC = main.cpp \
+	  ./Server/Server.cpp \
+	  ./Socket/Socket.cpp \
+	  ./Client/Client.cpp \
+	  ./Channel/Channel.cpp \
+	  ./Response/Response.cpp \
+	  $(CMDDIR)nick.cpp $(CMDDIR)pass.cpp $(CMDDIR)user.cpp
+
 OBJS = $(SRC:.cpp=.o)
 RM = rm -f
 

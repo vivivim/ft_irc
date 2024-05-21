@@ -1,5 +1,5 @@
-#include "Command.hpp"
-#include "Client.hpp"
+#include "../Command/Command.hpp"
+#include "../Client/Client.hpp"
 #include <set>
 
 void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clients)

@@ -1,8 +1,8 @@
 #ifndef COMMAND_HPP
 # define COMMAND_HPP
 
-# include "macro.h"
-# include "Client.hpp"
+# include "../Utils/Macro.h"
+# include "../Client/Client.hpp"
 # include <sstream>
 # include <string>
 # include <map>
