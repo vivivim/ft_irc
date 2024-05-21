@@ -8,7 +8,7 @@ void	user(std::stringstream& ss, Client& currClient)
 {
 	std::cout << "in user\n";
 
-	if (currClient.getIsPass())
+	if (!currClient.getIsPass())
 		return ;
 	if (currClient.getIsUsername())
 	{

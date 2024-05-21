@@ -16,6 +16,7 @@ class	Client {
 		bool								isPass;
 		bool								isUsername;
 		bool								isNick;
+		bool								isConnected;
 
 	public:
 		Client();
@@ -34,6 +35,8 @@ class	Client {
 		std::string getMsg();
 		bool		getIsPass();
 		bool		getIsUsername();
+		bool		getIsNick();
+		bool		getIsConnected();
  		std::string	getNick();
 };
 

@@ -7,7 +7,7 @@ void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clien
 {
 	std::cout << "in nick\n";
 
-	if (currClient.getIsPass() == false)
+	if (!currClient.getIsPass())
 		return;
 
 	std::string oldNick = currClient.getNick();
@@ -45,5 +45,4 @@ void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clien
 	currClient.setIsNick(true);
 	// oldNick + "!" + root@127.0.0.1 + " NICK :" + nick
 	std::cout << "success nick\n";
-	exit(0);
 }

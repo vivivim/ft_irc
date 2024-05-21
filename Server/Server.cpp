@@ -122,6 +122,7 @@ void	Server::getClientMsg(int currFd)
 		}
 		std::cout << it->second.getMsg() << std::endl;
 		letsGoParsing(it->second);
+		sendWelcomeMsgToClient(it->second);
 	}
 }
 
@@ -162,10 +163,6 @@ void	Server::letsGoParsing(Client& currClient)
 		// 	std::cout << "join";
 	}
 	currClient.setMsg("");
-	Response response;
-	response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
-	response.setFd(currClient.getFd());
-	responses.push(response);
 }
 
 void	Server::sendResponseMsg()
@@ -184,6 +181,26 @@ void	Server::sendResponseMsg()
 			responses.pop();
 	}
 }
+
+void	Server::sendWelcomeMsgToClient(Client& currClient)
+{
+	if (!currClient.getIsPass() && !currClient.getIsUsername() && !currClient.getIsNick() && !currClient.getIsConnected())
+	{
+		Response response;
+		response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
+		response.setFd(currClient.getFd());
+		responses.push(response);
+	}
+	if (currClient.getIsPass() && currClient.getIsUsername() && currClient.getIsNick() && !currClient.getIsConnected())
+	{
+		Response response;
+		response.setMsg(":irc.local 001 yujin :Welcome to the Localnet IRC Network yujin!root@127.0.0.1\r\n");
+		response.setMsg(":irc.local 002 yujin :Your host is irc.local, running version ircserv");
+		response.setFd(currClient.getFd());
+		responses.push(response);
+	}
+}
+
 
 void	Server::disconnectClient(int key)
 {
