@@ -11,21 +11,20 @@ void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clien
 		return;
 
 	std::string oldNick = currClient.getNick();
-	std::string cmd;
 	std::string nick;
-	if (!(ss >> cmd))
+	if (!(ss >> nick))
 	{
 		// ERR_NONICKNAMEGIVEN + oldNick + ERR_NONICKNAMEGIVEN_MSG (:irc.local 431 abc :No nickname given)
 		return;
 	}
-	ss >> nick;
+	
 	
 	std::map<int, Client>::iterator it;
 	for(it = clients.begin(); it != clients.end(); ++it)
 	{
 		if (&it->second == &currClient)
 			continue;
-		if (it->second.getNick() == oldNick)
+		if (oldNick == nick)
 		{
 			// ERR_NICKNAMEINUSE + oldNcik + nick + ERR_NICKNAMEINUSE_MSG (:irc.local 433 origin nick :Nickname is already in use.)
 			return;
