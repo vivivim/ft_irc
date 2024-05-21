@@ -82,7 +82,7 @@ void	Server::run()
 					getClientMsg(currEvent->ident);
 			}
 			else if (currEvent->filter == EVFILT_WRITE)
-				sendResponseMsg(currEvent->ident);
+				sendResponseMsg();
 		}
 	}
 }
@@ -107,7 +107,7 @@ void	Server::getClientMsg(int currFd)
 	std::map<int, Client>::iterator it = clients.find(currFd);
 	if (it != clients.end())
 	{
-		char	buf[40000];
+		char	buf[512];
 		int n = recv(currFd, buf, sizeof(buf), 0);
 		if (n <= 0)
 		{
@@ -125,15 +125,30 @@ void	Server::getClientMsg(int currFd)
 	}
 }
 
+std::vector<std::string> split(const std::string& str, const std::string& delimiter) {
+	std::vector<std::string> tokens;
+	size_t start = 0;
+	size_t end = str.find(delimiter);
+
+	while (end != std::string::npos) {
+		tokens.push_back(str.substr(start, end - start));
+		start = end + delimiter.length();
+		end = str.find(delimiter, start);
+	}
+	tokens.push_back(str.substr(start));
+
+	return tokens;
+}
+
 void	Server::letsGoParsing(Client& currClient)
 {
-	std::istringstream	iss(currClient.getMsg());
-	std::string line;
+	std::string delimiter = "\r\n";
 	std::string	cmd;
+	std::vector<std::string> tokens = split(currClient.getMsg(), delimiter);
 
-	while (std::getline(iss, line))
-	{
-		std::stringstream	ss(line);
+	for (size_t i = 0; i < tokens.size(); ++i) {
+		// std::cout << i << " " << tokens[i] << std::endl;
+		std::stringstream	ss(tokens[i]);
 		ss >> cmd;
 		if (cmd == "PASS")
 			pass(ss, pwd, currClient);
@@ -141,26 +156,32 @@ void	Server::letsGoParsing(Client& currClient)
 			user(ss, currClient);
 		else if (cmd == "NICK")
 			nick(ss, currClient, clients);
+		// else if (cmd == "CAP LS 302")
+		// 	std::cout << "cap ls\n";
+		// else if (cmd == "JOIN :")
+		// 	std::cout << "join";
 	}
+	currClient.setMsg("");
+	Response response;
+	response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
+	response.setFd(currClient.getFd());
+	responses.push(response);
 }
 
-void	Server::sendResponseMsg(int currFd)
+void	Server::sendResponseMsg()
 {
-	std::map<int, Client>::iterator it = clients.find(currFd);
-	Client& currClient = it->second;
-	if (it != clients.end())
+	while(!responses.empty())
 	{
-		if (!currClient.getMsg().empty())
+		int fd = responses.front().getFd();
+		std::string msg = responses.front().getMsg();
+		int n = send(fd, msg.c_str(), msg.size(), 0);
+		if (n < 0)
 		{
-			int n = send(currFd, currClient.getMsg().c_str(), currClient.getMsg().size(), 0);
-			if (n < 0)
-			{
-				std::cerr << "Error: Write failed\n";
-				disconnectClient(currFd);
-			}
-			else
-				currClient.setMsg("");
+			std::cerr << "Error: Write failed\n";
+			disconnectClient(fd);
 		}
+		else
+			responses.pop();
 	}
 }
 
