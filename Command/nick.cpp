@@ -1,9 +1,12 @@
 #include "../Command/Command.hpp"
 #include "../Client/Client.hpp"
 #include <set>
+#include <iostream>
 
 void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clients)
 {
+	std::cout << "in nick\n";
+
 	if (currClient.getIsPass() == false)
 		return;
 
@@ -42,4 +45,6 @@ void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clien
 	currClient.setNick(nick);
 	currClient.setIsNick(true);
 	// oldNick + "!" + root@127.0.0.1 + " NICK :" + nick
+	std::cout << "success nick\n";
+	exit(0);
 }

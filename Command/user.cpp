@@ -2,8 +2,12 @@
 #include "../Client/Client.hpp"
 #include "../Utils/Config.h"
 
+#include <iostream>
+
 void	user(std::stringstream& ss, Client& currClient)
 {
+	std::cout << "in user\n";
+
 	if (currClient.getIsPass())
 		return ;
 	if (currClient.getIsUsername())
@@ -22,4 +26,5 @@ void	user(std::stringstream& ss, Client& currClient)
 		input = input.substr(0, 10);
 	currClient.setUsername(input);
 	currClient.setIsUsername(true);
+	std::cout << "success user\n";
 }

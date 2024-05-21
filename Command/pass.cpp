@@ -1,6 +1,8 @@
 #include "../Command/Command.hpp"
 #include "../Client/Client.hpp"
 
+#include <iostream>
+
 void	pass(std::stringstream& ss, std::string pwd, Client& currClient)
 {
 	std::string	cmd;
@@ -20,4 +22,5 @@ void	pass(std::stringstream& ss, std::string pwd, Client& currClient)
 		return ;
 	}
 	currClient.setIsPass(true);
+	std::cout << "success pass\n";
 }
