@@ -16,14 +16,14 @@ class	Server {
 		int			port;
 		std::string	pwd;
 
-		int						kq;
+		int							kq;
 		std::vector<struct kevent>	changeList;
-		struct kevent		eventList[8];
-		Socket					socket;
+		struct kevent				eventList[8];
+		Socket						socket;
 
-		std::map<int, Client>	clients;
-		std::map<int, Channel>	channels;
-		std::queue<Response>	responses;
+		std::map<int, Client>			clients;
+		std::map<std::string, Channel>	channels;
+		std::queue<Response>			responses;
 		// time_t					createdTime;
 
 	public:
