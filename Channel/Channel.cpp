@@ -9,3 +9,5 @@ Channel::~Channel()
 {
 
 }
+
+bool Channel::getIsLock() { return isLock; }

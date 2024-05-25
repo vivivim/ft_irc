@@ -3,6 +3,7 @@
 
 # include <string>
 # include <map>
+#include <vector>
 
 class Client;
 
@@ -17,10 +18,13 @@ private:
 	bool					inviteOnly;
 	bool					isLock;
 	std::string				key;
+	std::vector<Client>		invitedPeople;
 
 public:
 	Channel();
 	~Channel();
+	
+	bool	getIsLock();
 
 };
 

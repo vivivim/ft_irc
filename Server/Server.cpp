@@ -158,7 +158,7 @@ void	Server::letsGoParsing(Client& currClient)
 		else if (cmd == "NICK")
 			nick(ss, currClient, clients);
 		else if (cmd == "JOIN")
-			join(ss, currClient,
+			join(ss, currClient, channels);
 		// else if (cmd == "CAP LS 302")
 		// 	std::cout << "cap ls\n";
 		// else if (cmd == "JOIN :")

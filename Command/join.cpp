@@ -1,7 +1,7 @@
 #include "Command.hpp"
 #include "../Channel/Channel.hpp"
 
-void	join(std::stringstream ss, std::map<int, Channel> channels)
+void	join(std::stringstream ss, Client &currClient, std::map<int, Channel> channels)
 {
 	std::string	channelInput;
 
@@ -10,7 +10,7 @@ void	join(std::stringstream ss, std::map<int, Channel> channels)
 		// ERR_NEEDMOREPARAMS(461);
 		return ;
 	}
-	if (channels.getIsLock())
+	if (channels[].getIsLock())
 	{
 		std::string	keyInput;
 		if (!(ss >> input))
