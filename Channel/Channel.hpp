@@ -26,7 +26,7 @@ public:
 	Channel(std::string);
 	~Channel();
 	
-	bool		isSheInvited();
+	bool		isSheInvited(std::string nick);
 	void		addClient(Client& newbie);
 	void		plusMemberCount();
 	void		minusMemberCount();

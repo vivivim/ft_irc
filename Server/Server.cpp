@@ -147,8 +147,8 @@ void	Server::letsGoParsing(Client& currClient)
 	std::string	cmd;
 	std::vector<std::string> tokens = split(currClient.getMsg(), delimiter);
 
-	for (size_t i = 0; i < tokens.size(); ++i) {
-		// std::cout << i << " " << tokens[i] << std::endl;
+	for (size_t i = 0; i < tokens.size() && !tokens[i].empty(); ++i) {
+		//std::cout << i << " " << tokens[i] << std::endl;
 		std::stringstream	ss(tokens[i]);
 		ss >> cmd;
 		if (cmd == "PASS")
@@ -158,7 +158,7 @@ void	Server::letsGoParsing(Client& currClient)
 		else if (cmd == "NICK")
 			nick(ss, currClient, clients);
 		else if (cmd == "JOIN")
-			join(ss, currClient, channels);
+			join(ss, currClient);
 		// else if (cmd == "CAP LS 302")
 		// 	std::cout << "cap ls\n";
 		// else if (cmd == "JOIN :")
@@ -217,6 +217,48 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 	Channel	curr = channels[channelName];
 	curr.addClient(newbie);
 	curr.plusMemberCount();
+}
+
+void	Server::join(std::stringstream& ss, Client &currClient)
+{
+	std::string	channelInput;
+
+	if (!(ss >> channelInput))
+	{
+		// ERR_NEEDMOREPARAMS(461);
+		return ;
+	}
+	std::map<std::string, Channel>::iterator	it;
+	it = channels.find(channelInput);
+	if (it == channels.end())
+		createNewChannel(currClient, channelInput);
+	else
+	{
+		{
+			std::string	keyInput;
+			if (!(ss >> keyInput))
+			{
+				//ERR_NEEDMOREPARAMS (461);
+				return ;
+			}
+			if (keyInput != it->second.getKey())
+				return ;
+				//ERR_BADCHANNELKEY(475);
+		}
+		if (it->second.getIsInviteOnly())
+		{
+			if (!it->second.isSheInvited(currClient.getNick()))
+				return ;
+				//ERR_INVITEONLYCHAN(473);
+		}
+		if (it->second.getIsLimit())
+		{
+			if (it->second.getLimits() <= it->second.getMemberCount())
+				return ;
+				//ERR_CHANNELISFULL(471);
+		}
+		joinChannel(currClient, channelInput);
+	}
 }
 
 void	Server::disconnectClient(int key)

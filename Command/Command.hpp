@@ -10,7 +10,6 @@
 void	pass(std::stringstream& ss, std::string pwd, Client& currClient);
 void	user(std::stringstream& ss, Client& currClient);
 void	nick(std::stringstream& ss, Client& currClient, std::map<int, Client> clients);
-void	join(std::stringstream& ss, Client& currClient, std::map<std::string, Channel> channels);
 void	privmsg();
 void	exit();
 

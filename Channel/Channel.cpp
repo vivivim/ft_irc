@@ -1,10 +1,11 @@
 #include "Channel.hpp"
+#include "../Client/Client.hpp"
 
 Channel::Channel() : memberCount(0), isLock(false), isInviteOnly(false), isLimit(false)
 {
 }
 
-Channel::Channel(std::string name) : name(name), memberCount(0), isLock(false), inInviteOnly(false), isLimit(false)
+Channel::Channel(std::string name) : name(name), memberCount(0), isLock(false), isInviteOnly(false), isLimit(false)
 {
 }
 
@@ -27,8 +28,8 @@ void		Channel::addClient(Client& newbie)
 	this->clients[newbie.getFd()] = newbie;
 }
 
-void	plusMemberCount() { this->++memberCount; }
-void	minusMemberCount() { this->--memberCount; }
+void	Channel::plusMemberCount() { ++memberCount; }
+void	Channel::minusMemberCount() { --memberCount; }
 
 int			Channel::getMemberCount() { return memberCount; }
 int			Channel::getLimits() { return limits; }

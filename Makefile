@@ -10,7 +10,7 @@ SRC = main.cpp \
 	  ./Client/Client.cpp \
 	  ./Channel/Channel.cpp \
 	  ./Response/Response.cpp \
-	  $(CMDDIR)nick.cpp $(CMDDIR)pass.cpp $(CMDDIR)user.cpp $(CMDDIR)join.cpp
+	  $(CMDDIR)nick.cpp $(CMDDIR)pass.cpp $(CMDDIR)user.cpp
 
 OBJS = $(SRC:.cpp=.o)
 RM = rm -f

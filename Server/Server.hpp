@@ -25,6 +25,9 @@ class	Server {
 		std::map<std::string, Channel>	channels;
 		std::queue<Response>			responses;
 		// time_t					createdTime;
+		
+		void	createNewChannel(Client& newbie, std::string channelName);
+		void	joinChannel(Client& newbie, std::string channelName);
 
 	public:
 		Server();
@@ -40,8 +43,7 @@ class	Server {
 		void	sendResponseMsg();
 		void	letsGoParsing(Client& currClient);
 		void	sendWelcomeMsgToClient(Client& currClient);
-		static void	createNewChannel(Client& newbie, std::string channelName);
-		static void	joinChannel(Client& newbie, std::string channelName);
+		void	join(std::stringstream& ss, Client &currClient);
 		int		getPort();
 };
 
