@@ -203,6 +203,21 @@ void	Server::sendWelcomeMsgToClient(Client& currClient)
 	}
 }
 
+void	Server::createNewChannel(Client& newbie, std::string channelName)
+{
+	Channel newChannel(channelName);
+	newChannel.plusMemberCount();
+	newChannel.addClient(newbie);
+	//newbie operator 설정
+	this->channels[channelName] = newChannel;
+}
+
+void	Server::joinChannel(Client& newbie, std::string channelName)
+{
+	Channel	curr = channels[channelName];
+	curr.addClient(newbie);
+	curr.plusMemberCount();
+}
 
 void	Server::disconnectClient(int key)
 {

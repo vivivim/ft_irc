@@ -10,22 +10,34 @@ class Client;
 class Channel
 {
 private:
-	std::string				name;
-	std::map<int, Client>	clients;
-	int						memberCount;
-	int						limits;
-	std::string				topic;
-	bool					inviteOnly;
-	bool					isLock;
-	std::string				key;
-	std::vector<Client>		invitedPeople;
+	std::string					name;
+	std::map<int, Client>		clients;
+	int							memberCount;
+	int							limits;
+	std::string					topic;
+	std::string					key;
+	bool						isLock;
+	bool						isInviteOnly;
+	bool						isLimit;
+	std::vector<std::string>	invitedPeople;
 
 public:
 	Channel();
+	Channel(std::string);
 	~Channel();
 	
-	bool	getIsLock();
+	bool		isSheInvited();
+	void		addClient(Client& newbie);
+	void		plusMemberCount();
+	void		minusMemberCount();
 
+	int			getMemberCount();
+	int			getLimits();
+	std::string	getTopic();
+	std::string	getKey();
+	bool		getIsLock();
+	bool		getIsInviteOnly();
+	bool		getIsLimit();
 };
 
 #endif
