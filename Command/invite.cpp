@@ -1,8 +1,9 @@
 #include "../Command/Command.hpp"
+#include "../Server/Server.hpp"
 
 #include <iostream>
 
-void invite(std::stringstream& ss, Client &currClient, std::map<int, Client> clients, std::map<std::string, Channel>& channels)
+void Server::invite(std::stringstream& ss, Client &currClient)
 {
 	std::string invitedUser;
 	if (!(ss >> invitedUser)) // 무시
@@ -50,8 +51,9 @@ void invite(std::stringstream& ss, Client &currClient, std::map<int, Client> cli
 	
 	// 초대 성공 -> RPL_INVITING : :dan-!d@localhost INVITE Wiz #test (dan-이 채널 test에 Wiz를 초대하는데에 성공함)
 	channel.addInvited(invitedUser);
+	Response response;
 	std::string msg = "INVITE " + invitedUser + " " + channelName;
-	// 응답메시지에 전송하기!
+	response.setMsg(msg);
 
 	std::cout << "success invite\n";
 }

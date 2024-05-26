@@ -45,6 +45,9 @@ class	Server {
 		void	sendWelcomeMsgToClient(Client& currClient);
 		void	join(std::stringstream& ss, Client &currClient);
 		int		getPort();
+
+
+		void	invite(std::stringstream& ss, Client &currClient);
 };
 
 #endif
