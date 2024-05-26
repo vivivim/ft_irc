@@ -14,6 +14,7 @@ Client::~Client()
 
 void	Client::setMsg(std::string msg) { msg = msg; }
 
+<<<<<<< HEAD
 void	Client::attachMsg(std::string msg) { msg += msg; }
 void	Client::setIsPass(bool TF) { isPass = TF; }
 void	Client::setIsUsername(bool TF) { isUsername = TF; }
@@ -22,6 +23,15 @@ void	Client::unsetOperator() { prefix = ""; }
 void	Client::setIsNick(bool TF)  { isNick = TF; }
 void	Client::setUsername(std::string input) { username = input; }
 void	Client::setNick(std::string nick) { nick = nick; }
+=======
+void	Client::attachMsg(std::string msg) { this->msg += msg; }
+void	Client::setIsPass(bool TF) { this->isPass = TF; }
+void	Client::setIsUsername(bool TF) { this->isUsername = TF; }
+void	Client::setIsNick(bool TF)  { this->isNick = TF; }
+void	Client::setUsername(std::string input) { this->username = input; }
+void	Client::setNick(std::string nick) { this->nick = nick; }
+void	Client::setIsConnected(bool TF) { this->isConnected = TF; }
+>>>>>>> e1de6f8001a9e5e4bb0a283ba394f270857ea002
 
 int			Client::getFd() { return fd; }
 std::string Client::getMsg() { return msg; }

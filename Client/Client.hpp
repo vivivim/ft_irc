@@ -33,6 +33,7 @@ class	Client {
 		void		setOperator();
 		void		unsetOperator();
 		void		setNick(std::string nick);
+		void		setIsConnected(bool TF);
 
 		int			getFd();
 		std::string getMsg();
