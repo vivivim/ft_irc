@@ -16,15 +16,18 @@ class	Server {
 		int			port;
 		std::string	pwd;
 
-		int							kq;
-		std::vector<struct kevent>	changeList;
-		struct kevent				eventList[8];
-		Socket						socket;
+		int								kq;
+		std::vector<struct kevent>		changeList;
+		struct kevent					eventList[8];
+		Socket							socket;
 
 		std::map<int, Client>			clients;
 		std::map<std::string, Channel>	channels;
 		std::queue<Response>			responses;
 		// time_t					createdTime;
+		
+		void	createNewChannel(Client& newbie, std::string channelName);
+		void	joinChannel(Client& newbie, std::string channelName);
 
 	public:
 		Server();
@@ -40,7 +43,7 @@ class	Server {
 		void	sendResponseMsg();
 		void	letsGoParsing(Client& currClient);
 		void	sendWelcomeMsgToClient(Client& currClient);
-		
+		void	join(std::stringstream& ss, Client &currClient);
 		int		getPort();
 };
 

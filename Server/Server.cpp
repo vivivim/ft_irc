@@ -147,8 +147,8 @@ void	Server::letsGoParsing(Client& currClient)
 	std::string	cmd;
 	std::vector<std::string> tokens = split(currClient.getMsg(), delimiter);
 
-	for (size_t i = 0; i < tokens.size(); ++i) {
-		// std::cout << i << " " << tokens[i] << std::endl;
+	for (size_t i = 0; i < tokens.size() && !tokens[i].empty(); ++i) {
+		//std::cout << i << " " << tokens[i] << std::endl;
 		std::stringstream	ss(tokens[i]);
 		ss >> cmd;
 		if (cmd == "PASS")
@@ -158,7 +158,7 @@ void	Server::letsGoParsing(Client& currClient)
 		else if (cmd == "NICK")
 			nick(ss, currClient, clients);
 		else if (cmd == "JOIN")
-			join(ss, currClient, channels);
+			join(ss, currClient);
 		// else if (cmd == "CAP LS 302")
 		// 	std::cout << "cap ls\n";
 		// else if (cmd == "JOIN :")
@@ -186,23 +186,86 @@ void	Server::sendResponseMsg()
 
 void	Server::sendWelcomeMsgToClient(Client& currClient)
 {
-	if (!currClient.getIsPass() && !currClient.getIsUsername() && !currClient.getIsNick() && !currClient.getIsConnected())
-	{
-		Response response;
-		response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
-		response.setFd(currClient.getFd());
-		responses.push(response);
-	}
+	// if (!currClient.getIsPass() && !currClient.getIsUsername() && !currClient.getIsNick() && !currClient.getIsConnected())
+	// {
+	// 	Response response;
+	// 	response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
+	// 	response.setFd(currClient.getFd());
+	// 	responses.push(response);
+	// 	std::cout << "send welcome\n";
+	// }
+
 	if (currClient.getIsPass() && currClient.getIsUsername() && currClient.getIsNick() && !currClient.getIsConnected())
 	{
 		Response response;
-		response.setMsg(":irc.local 001 yujin :Welcome to the Localnet IRC Network yujin!root@127.0.0.1\r\n");
-		response.setMsg(":irc.local 002 yujin :Your host is irc.local, running version ircserv");
+		response.setMsg(":irc.local 001 yujin :Welcome to the Localnet IRC Network yujin!localhost@127.0.0.1\r\n");
+		// response.setMsg(":irc.local 002 yujin :Your host is irc.local, running version ircserv\r\n");
+		// response.setMsg(":irc.local 003 yujin :This server was created 05:49:47 May 19 2024\r\n");
+
+		currClient.setIsConnected(true);
 		response.setFd(currClient.getFd());
 		responses.push(response);
+		std::cout << "send welcome\n";
 	}
 }
 
+void	Server::createNewChannel(Client& newbie, std::string channelName)
+{
+	Channel newChannel(channelName);
+	newChannel.plusMemberCount();
+	newChannel.addClient(newbie);
+	//newbie operator 설정
+	this->channels[channelName] = newChannel;
+}
+
+void	Server::joinChannel(Client& newbie, std::string channelName)
+{
+	Channel	curr = channels[channelName];
+	curr.addClient(newbie);
+	curr.plusMemberCount();
+}
+
+void	Server::join(std::stringstream& ss, Client &currClient)
+{
+	std::string	channelInput;
+
+	if (!(ss >> channelInput))
+	{
+		// ERR_NEEDMOREPARAMS(461);
+		return ;
+	}
+	std::map<std::string, Channel>::iterator	it;
+	it = channels.find(channelInput);
+	if (it == channels.end())
+		createNewChannel(currClient, channelInput);
+	else
+	{
+		{
+			std::string	keyInput;
+			if (!(ss >> keyInput))
+			{
+				//ERR_NEEDMOREPARAMS (461);
+				return ;
+			}
+			if (keyInput != it->second.getKey())
+				return ;
+				//ERR_BADCHANNELKEY(475);
+		}
+		if (it->second.getIsInviteOnly())
+		{
+			if (!it->second.isSheInvited(currClient.getNick()))
+				return ;
+				//ERR_INVITEONLYCHAN(473);
+		}
+		if (it->second.getIsLimit())
+		{
+			if (it->second.getLimits() <= it->second.getMemberCount())
+				return ;
+				//ERR_CHANNELISFULL(471);
+		}
+		joinChannel(currClient, channelInput);
+	}
+}
 
 void	Server::disconnectClient(int key)
 {

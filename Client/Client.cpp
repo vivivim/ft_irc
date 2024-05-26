@@ -20,6 +20,7 @@ void	Client::setIsUsername(bool TF) { this->isUsername = TF; }
 void	Client::setIsNick(bool TF)  { this->isNick = TF; }
 void	Client::setUsername(std::string input) { this->username = input; }
 void	Client::setNick(std::string nick) { this->nick = nick; }
+void	Client::setIsConnected(bool TF) { this->isConnected = TF; }
 
 int			Client::getFd() { return fd; }
 std::string Client::getMsg() { return msg; }
