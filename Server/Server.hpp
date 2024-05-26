@@ -43,6 +43,7 @@ class	Server {
 		void	sendResponseMsg();
 		void	letsGoParsing(Client& currClient);
 		void	sendWelcomeMsgToClient(Client& currClient);
+		void	sendMsgToChannel(std::stringstream& ss);
 		void	join(std::stringstream& ss, Client &currClient);
 		int		getPort();
 };

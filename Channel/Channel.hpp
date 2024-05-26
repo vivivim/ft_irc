@@ -15,9 +15,12 @@ private:
 	int							memberCount;
 	int							limits;
 	std::string					topic;
+	std::string					topicWho;
+	time_t						topicTime;
 	std::string					key;
 	bool						isLock;
 	bool						isInviteOnly;
+	bool						isTopicOprOnly;
 	bool						isLimit;
 	std::vector<std::string>	invitedPeople;
 
@@ -31,9 +34,12 @@ public:
 	void		plusMemberCount();
 	void		minusMemberCount();
 
+	std::string	getClientList();
 	int			getMemberCount();
 	int			getLimits();
 	std::string	getTopic();
+	std::string	getTopicWho();
+	std::string	getTopicTime();
 	std::string	getKey();
 	bool		getIsLock();
 	bool		getIsInviteOnly();

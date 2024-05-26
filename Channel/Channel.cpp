@@ -5,7 +5,7 @@ Channel::Channel() : memberCount(0), isLock(false), isInviteOnly(false), isLimit
 {
 }
 
-Channel::Channel(std::string name) : name(name), memberCount(0), isLock(false), isInviteOnly(false), isLimit(false)
+Channel::Channel(std::string name) : name(name), memberCount(0), isLock(false), isInviteOnly(false), isTopicOprOnly(false), isLimit(false)
 {
 }
 
@@ -30,6 +30,22 @@ void		Channel::addClient(Client& newbie)
 
 void	Channel::plusMemberCount() { ++memberCount; }
 void	Channel::minusMemberCount() { --memberCount; }
+
+std::string	Channel::getclientList()
+{
+	std::string	list;
+	std::map<int, Client>::iterator	it = clients.begin();
+	for (; it != clients.end(); ++it)
+		list += it->second.getPrefix + it->second.getNick() + " ";
+	return list;
+}
+
+void		Channel::setTopic(std::string input) { topic = input; }
+void		Channel::setTopicWho(std::string input) { topicWho = input; }
+void		Channel::setTopicTime()
+{
+	time_t	topicTime;
+}
 
 int			Channel::getMemberCount() { return memberCount; }
 int			Channel::getLimits() { return limits; }

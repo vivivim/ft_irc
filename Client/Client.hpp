@@ -9,6 +9,7 @@ class	Client {
 	private:
 		int									fd;
 		std::string							msg;
+		std::string							prefix;
 		std::string							nick;
 		std::string							username;
 		// std::map<std::string, Channel>	channels;
@@ -29,6 +30,8 @@ class	Client {
 		void		setIsUsername(bool TF);
 		void		setIsNick(bool TF);
 		void		setUsername(std::string input);
+		void		setOperator();
+		void		unsetOperator();
 		void		setNick(std::string nick);
 
 		int			getFd();

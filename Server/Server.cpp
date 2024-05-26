@@ -121,8 +121,8 @@ void	Server::getClientMsg(int currFd)
 			it->second.attachMsg(buf);
 		}
 		std::cout << it->second.getMsg() << std::endl;
-		letsGoParsing(it->second);
 		sendWelcomeMsgToClient(it->second);
+		letsGoParsing(it->second);
 	}
 }
 
@@ -163,8 +163,52 @@ void	Server::letsGoParsing(Client& currClient)
 		// 	std::cout << "cap ls\n";
 		// else if (cmd == "JOIN :")
 		// 	std::cout << "join";
+		else if (cmd == "PRIVMSG")
+			sendMsgToChannel(ss);
+		else if (cmd == "topic")
+			topic(ss, currClient);
 	}
 	currClient.setMsg("");
+}
+
+void	Seerver::topic(std::stringstream& ss, Client& currClient)
+{
+	std::string	input;
+	if (!(ss >> input))
+	{
+		//ERR_NOTONCHANNEL(442);
+		return ;
+	}
+	Channel	currChannel = channels[input];
+	
+	if (!(ss >> input))
+	{
+		//ERR_NEEDMOREPARAMS;
+		return ;
+	}
+	if (currChannel.getIsTopicOprOnly() && currClient.getPrefix != "@")
+	{
+		//ERR_CHANOPRIVSNEEDED(482);
+		return ;
+	}
+	currChannel.setTopic(input);
+	currChannel.setTopicWho(currClient.getNick());
+	currChannel.setTopicTime();
+	//채널에 속한 사람 모두에게 응답 전송
+	std::string	msg = currClient.getIsNick() + " TOPIC " + currChannel.getName() + " :" + input + "\r\n\r\n";
+	sendMsgToChannel(currChannel, msg);
+}
+
+void	Server::sendMsgToChannel(Channel channel, std::string msg)
+{
+	std::map<int, Client>::iterator	it;
+	for (it = channel.getClientsBegin(); it != channel.getClientsEnd(); ++it)
+		pushResponse(it->first, msg);
+}
+
+void	Server::sendMsgToChannel(std::stringstream& ss)
+{
+
 }
 
 void	Server::sendResponseMsg()
@@ -188,14 +232,14 @@ void	Server::sendWelcomeMsgToClient(Client& currClient)
 {
 	if (!currClient.getIsPass() && !currClient.getIsUsername() && !currClient.getIsNick() && !currClient.getIsConnected())
 	{
-		Response response;
+		Response	response;
 		response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
 		response.setFd(currClient.getFd());
 		responses.push(response);
 	}
 	if (currClient.getIsPass() && currClient.getIsUsername() && currClient.getIsNick() && !currClient.getIsConnected())
 	{
-		Response response;
+		Response	response;
 		response.setMsg(":irc.local 001 yujin :Welcome to the Localnet IRC Network yujin!root@127.0.0.1\r\n");
 		response.setMsg(":irc.local 002 yujin :Your host is irc.local, running version ircserv");
 		response.setFd(currClient.getFd());
@@ -208,7 +252,7 @@ void	Server::createNewChannel(Client& newbie, std::string channelName)
 	Channel newChannel(channelName);
 	newChannel.plusMemberCount();
 	newChannel.addClient(newbie);
-	//newbie operator 설정
+	newbie.setOperator();
 	this->channels[channelName] = newChannel;
 }
 
@@ -217,6 +261,15 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 	Channel	curr = channels[channelName];
 	curr.addClient(newbie);
 	curr.plusMemberCount();
+	std::string	msg = "JOIN " + channelName + "/r/n";
+	if (curr.getTopic() != "")
+	{
+		msg += RPL_TOPIC + " " + newbie.getNick() + " " + channelName + " :" + curr.getTopic() + "/r/n";
+		msg += RPL_TOPICWHOTIME + " " + newbie.getNick() + " " channelName + " " + curr.getTopicWho() + " :" + curr.getTopicTime() + "\r\n";
+	}
+	msg += RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + curr.getClientList() + "\r\n";
+	msg += RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
+	pushResponse(newbie.getFd(), msg);
 }
 
 void	Server::join(std::stringstream& ss, Client &currClient)
