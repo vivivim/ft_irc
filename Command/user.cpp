@@ -1,10 +1,11 @@
 #include "../Command/Command.hpp"
+#include "../Server/Server.hpp"
 #include "../Client/Client.hpp"
 #include "../Utils/Config.h"
 
 #include <iostream>
 
-void	user(std::stringstream& ss, Client& currClient)
+void	Server::user(std::stringstream& ss, Client& currClient)
 {
 	std::cout << "in user\n";
 

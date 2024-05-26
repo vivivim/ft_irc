@@ -54,6 +54,7 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 	Response response;
 	std::string msg = "INVITE " + invitedUser + " " + channelName;
 	response.setMsg(msg);
+	responses.push(response);
 
 	std::cout << "success invite\n";
 }
