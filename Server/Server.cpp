@@ -186,20 +186,26 @@ void	Server::sendResponseMsg()
 
 void	Server::sendWelcomeMsgToClient(Client& currClient)
 {
-	if (!currClient.getIsPass() && !currClient.getIsUsername() && !currClient.getIsNick() && !currClient.getIsConnected())
-	{
-		Response response;
-		response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
-		response.setFd(currClient.getFd());
-		responses.push(response);
-	}
+	// if (!currClient.getIsPass() && !currClient.getIsUsername() && !currClient.getIsNick() && !currClient.getIsConnected())
+	// {
+	// 	Response response;
+	// 	response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
+	// 	response.setFd(currClient.getFd());
+	// 	responses.push(response);
+	// 	std::cout << "send welcome\n";
+	// }
+
 	if (currClient.getIsPass() && currClient.getIsUsername() && currClient.getIsNick() && !currClient.getIsConnected())
 	{
 		Response response;
-		response.setMsg(":irc.local 001 yujin :Welcome to the Localnet IRC Network yujin!root@127.0.0.1\r\n");
-		response.setMsg(":irc.local 002 yujin :Your host is irc.local, running version ircserv");
+		response.setMsg(":irc.local 001 yujin :Welcome to the Localnet IRC Network yujin!localhost@127.0.0.1\r\n");
+		// response.setMsg(":irc.local 002 yujin :Your host is irc.local, running version ircserv\r\n");
+		// response.setMsg(":irc.local 003 yujin :This server was created 05:49:47 May 19 2024\r\n");
+
+		currClient.setIsConnected(true);
 		response.setFd(currClient.getFd());
 		responses.push(response);
+		std::cout << "send welcome\n";
 	}
 }
 

@@ -30,6 +30,7 @@ class	Client {
 		void		setIsNick(bool TF);
 		void		setUsername(std::string input);
 		void		setNick(std::string nick);
+		void		setIsConnected(bool TF);
 
 		int			getFd();
 		std::string getMsg();
