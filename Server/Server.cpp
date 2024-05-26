@@ -275,3 +275,11 @@ void	Server::disconnectClient(int key)
 
 int		Server::getPort() { return port; }
 
+
+void	Server::pushResponse(int fd, std::string msg)
+{
+	Response response;
+	response.setMsg(msg + "\r\n");
+	response.setFd(fd);
+	responses.push(response);
+}

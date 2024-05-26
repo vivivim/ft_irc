@@ -46,6 +46,8 @@ class	Server {
 		void	join(std::stringstream& ss, Client &currClient);
 		int		getPort();
 
+		void	pushResponse(int fd, std::string msg);
+
 		void	pass(std::stringstream& ss, Client& currClient);
 		void	user(std::stringstream& ss, Client& currClient);
 		void	nick(std::stringstream& ss, Client &currClient);
