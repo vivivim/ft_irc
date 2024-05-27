@@ -5,6 +5,8 @@
 
 const std::string SERVER_NAME = "ircserv";
 
+const std::string IL = ":irc.local"
+const std::string ADR = "!root@127.0.0.1";
 // WELCOME
 const std::string RPL_WELCOME = "001";
 const std::string RPL_WELCOME_MSG = "Welcome to the Internet Relay Network";
