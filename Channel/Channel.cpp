@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 #include "../Client/Client.hpp"
 
-Channel::Channel() : memberCount(0), isLock(false), isInviteOnly(false), isLimit(false)
+Channel::Channel() : memberCount(0), isLock(false), isInviteOnly(false), isTopicOprOnly(false), isLimit(false)
 {
 }
 
@@ -31,6 +31,15 @@ void		Channel::addClient(Client& newbie)
 void	Channel::plusMemberCount() { ++memberCount; }
 void	Channel::minusMemberCount() { --memberCount; }
 
+void		Channel::setTopic(std::string input) { topic = input; }
+void		Channel::setTopicWho(std::string input) { topicWho = input; }
+void		Channel::setTopicTime()
+{
+	time_t	topicTime;
+}
+
+std::string	Channel::getName() { return name; }
+std::map<int, Client>	Channel::getClients() { return clients; }
 std::string	Channel::getclientList()
 {
 	std::string	list;
@@ -40,17 +49,11 @@ std::string	Channel::getclientList()
 	return list;
 }
 
-void		Channel::setTopic(std::string input) { topic = input; }
-void		Channel::setTopicWho(std::string input) { topicWho = input; }
-void		Channel::setTopicTime()
-{
-	time_t	topicTime;
-}
-
 int			Channel::getMemberCount() { return memberCount; }
 int			Channel::getLimits() { return limits; }
 std::string	Channel::getTopic() { return topic; }
 std::string	Channel::getKey() { return key; }
 bool		Channel::getIsLock() { return isLock; }
 bool		Channel::getIsInviteOnly() { return isInviteOnly; }
+bool		Channel::getIsTopicOprOnly() { return isTopicOprOnly; }
 bool		Channel::getIsLimit() { return isLimit; }

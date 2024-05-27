@@ -37,6 +37,7 @@ class	Client {
 
 		int			getFd();
 		std::string getMsg();
+		std::string	getPrefix();
 		bool		getIsPass();
 		bool		getIsUsername();
 		bool		getIsNick();

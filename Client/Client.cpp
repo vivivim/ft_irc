@@ -25,6 +25,7 @@ void	Client::setIsConnected(bool TF) { this->isConnected = TF; }
 
 int			Client::getFd() { return fd; }
 std::string Client::getMsg() { return msg; }
+std::string	client::getPrefix() { return prefix; }
 bool		Client::getIsPass() { return isPass; }
 bool		Client::getIsUsername() { return isUsername; }
 std::string	Client::getPrefix() { return prefix; }

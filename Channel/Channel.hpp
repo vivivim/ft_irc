@@ -34,6 +34,12 @@ public:
 	void		plusMemberCount();
 	void		minusMemberCount();
 
+	void		setTopic(std::string input);
+	void		setTopicWho(std::string input);
+	void		setTopicTime();
+
+	std::string	getName();
+	std::map<int, Client>	getClients();
 	std::string	getClientList();
 	int			getMemberCount();
 	int			getLimits();
@@ -43,6 +49,7 @@ public:
 	std::string	getKey();
 	bool		getIsLock();
 	bool		getIsInviteOnly();
+	bool		getIsTopicOprOnly();
 	bool		getIsLimit();
 };
 

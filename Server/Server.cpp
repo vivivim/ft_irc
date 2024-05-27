@@ -164,14 +164,14 @@ void	Server::letsGoParsing(Client& currClient)
 		// else if (cmd == "JOIN :")
 		// 	std::cout << "join";
 		else if (cmd == "PRIVMSG")
-			sendMsgToChannel(ss);
+			privmsg(ss);
 		else if (cmd == "topic")
 			topic(ss, currClient);
 	}
 	currClient.setMsg("");
 }
 
-void	Seerver::topic(std::stringstream& ss, Client& currClient)
+void	Server::topic(std::stringstream& ss, Client& currClient)
 {
 	std::string	input;
 	if (!(ss >> input))
@@ -186,7 +186,7 @@ void	Seerver::topic(std::stringstream& ss, Client& currClient)
 		//ERR_NEEDMOREPARAMS;
 		return ;
 	}
-	if (currChannel.getIsTopicOprOnly() && currClient.getPrefix != "@")
+	if (currChannel.getIsTopicOprOnly() && currClient.getPrefix() != "@")
 	{
 		//ERR_CHANOPRIVSNEEDED(482);
 		return ;
@@ -195,20 +195,33 @@ void	Seerver::topic(std::stringstream& ss, Client& currClient)
 	currChannel.setTopicWho(currClient.getNick());
 	currChannel.setTopicTime();
 	//채널에 속한 사람 모두에게 응답 전송
-	std::string	msg = currClient.getIsNick() + " TOPIC " + currChannel.getName() + " :" + input + "\r\n\r\n";
+	std::string	msg = currClient.getNick() + " TOPIC " + currChannel.getName() + " :" + input + "\r\n\r\n";
 	sendMsgToChannel(currChannel, msg);
 }
 
 void	Server::sendMsgToChannel(Channel channel, std::string msg)
 {
-	std::map<int, Client>::iterator	it;
-	for (it = channel.getClientsBegin(); it != channel.getClientsEnd(); ++it)
+	std::map<int, Client>	whoInChannel = channel.getClients();
+	std::map<int, Client>::iterator	it = whoInChannel.begin();
+	for (; it != whoInChannel.end(); ++it)
 		pushResponse(it->first, msg);
 }
 
-void	Server::sendMsgToChannel(std::stringstream& ss)
+void	Server::privmsg(std::stringstream& ss)
 {
-
+	std::string	channel;
+	std::string	msg;
+	if (!(ss >> channel))
+	{
+		//무슨 에러?
+		return ;
+	}
+	if (!(ss >> msg))
+	{
+		//이런 일이 있을 수 있나?
+		return ;
+	}
+	sendMsgToChannel(channel, msg);
 }
 
 void	Server::sendResponseMsg()
@@ -271,11 +284,14 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 	if (curr.getTopic() != "")
 	{
 		msg += RPL_TOPIC + " " + newbie.getNick() + " " + channelName + " :" + curr.getTopic() + "/r/n";
-		msg += RPL_TOPICWHOTIME + " " + newbie.getNick() + " " channelName + " " + curr.getTopicWho() + " :" + curr.getTopicTime() + "\r\n";
+		msg += RPL_TOPICWHOTIME + " " + newbie.getNick() + " " + channelName + " " + curr.getTopicWho() + " :" + curr.getTopicTime() + "\r\n";
 	}
 	msg += RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + curr.getClientList() + "\r\n";
 	msg += RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
 	pushResponse(newbie.getFd(), msg);
+	msg = newbie.getNick() + " JOIN :" + channelName + "\r\n\r\n";
+	sendMsgToChannel(channelName, msg);
+
 }
 
 void	Server::join(std::stringstream& ss, Client &currClient)
