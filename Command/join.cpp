@@ -64,7 +64,7 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 		msg += IL + " " + RPL_TOPICWHOTIME + " " + newbie.getNick() + " " + channelName + " " + curr.getTopicWho() + " :" + curr.getTopicTime() + "\r\n";
 	}
 	msg += IL + " " + RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + curr.getClientList() + "\r\n";
-	msg += IL + " " RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
+	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
 	pushResponse(newbie.getFd(), msg);
 	msg = newbie.getNick() + " JOIN :" + channelName + "\r\n\r\n";
 	sendMsgToChannel(channelName, msg);
