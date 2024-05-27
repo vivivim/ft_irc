@@ -1,6 +1,7 @@
 #include "Channel.hpp"
 #include <algorithm>
 #include <ctime>
+#include <sstream>
 #include "../Client/Client.hpp"
 
 Channel::Channel() : memberCount(0), isLock(false), isInviteOnly(false), isTopicOprOnly(false), isLimit(false)
@@ -66,17 +67,19 @@ void		Channel::setTopicWho(std::string input) { topicWho = input; }
 void		Channel::setTopicTime()
 {
 	std::time_t	now = std::time(NULL);
-	topicTime = now;
+	std::stringstream ss;
+	ss << now;
+	topicTime = ss.str();
 }
 
 std::string	Channel::getName() { return name; }
 std::map<int, Client>	Channel::getClients() { return clients; }
-std::string	Channel::getclientList()
+std::string	Channel::getClientList()
 {
 	std::string	list;
 	std::map<int, Client>::iterator	it = clients.begin();
 	for (; it != clients.end(); ++it)
-		list += it->second.getPrefix + it->second.getNick() + " ";
+		list += it->second.getPrefix() + it->second.getNick() + " ";
 	return list;
 }
 
@@ -88,3 +91,5 @@ bool		Channel::getIsLock() { return isLock; }
 bool		Channel::getIsInviteOnly() { return isInviteOnly; }
 bool		Channel::getIsTopicOprOnly() { return isTopicOprOnly; }
 bool		Channel::getIsLimit() { return isLimit; }
+std::string	Channel::getTopicWho() { return topicWho; }
+std::string	Channel::getTopicTime() { return topicTime; }

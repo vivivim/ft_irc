@@ -16,14 +16,13 @@ private:
 	int							limits;
 	std::string					topic;
 	std::string					topicWho;
-	time_t						topicTime;
+	std::string					topicTime;
 	std::string					key;
 	bool						isLock;
 	bool						isInviteOnly;
 	bool						isTopicOprOnly;
 	bool						isLimit;
 	std::vector<std::string>	invitedPeople;
-	bool						inviteOnly;
 	std::vector<std::string>	chanOpList; // 방장 닉네임 리스트
 
 public:

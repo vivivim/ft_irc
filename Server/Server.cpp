@@ -121,8 +121,8 @@ void	Server::getClientMsg(int currFd)
 			it->second.attachMsg(buf);
 		}
 		std::cout << it->second.getMsg() << std::endl;
-		sendWelcomeMsgToClient(it->second);
 		letsGoParsing(it->second);
+		sendWelcomeMsgToClient(it->second);
 	}
 }
 
@@ -152,11 +152,11 @@ void	Server::letsGoParsing(Client& currClient)
 		std::stringstream	ss(tokens[i]);
 		ss >> cmd;
 		if (cmd == "PASS")
-			pass(ss, pwd, currClient);
+			pass(ss, currClient);
 		else if (cmd == "USER")
 			user(ss, currClient);
 		else if (cmd == "NICK")
-			nick(ss, currClient, clients);
+			nick(ss, currClient);
 		else if (cmd == "JOIN")
 			join(ss, currClient);
 		// else if (cmd == "CAP LS 302")
