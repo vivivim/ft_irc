@@ -23,14 +23,21 @@ private:
 	bool						isTopicOprOnly;
 	bool						isLimit;
 	std::vector<std::string>	invitedPeople;
+	bool						inviteOnly;
+	std::vector<std::string>	chanOpList; // 방장 닉네임 리스트
 
 public:
 	Channel();
 	Channel(std::string);
 	~Channel();
-	
+
 	bool		isSheInvited(std::string nick);
 	void		addClient(Client& newbie);
+
+	bool		IsUserInChannel(std::string nickName);
+	void		addInvited(std::string nickName);
+	bool		isChanOp(std::string nickName);
+	
 	void		plusMemberCount();
 	void		minusMemberCount();
 

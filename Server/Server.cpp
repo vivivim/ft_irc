@@ -344,3 +344,23 @@ void	Server::disconnectClient(int key)
 
 int		Server::getPort() { return port; }
 
+
+void	Server::pushResponse(int fd, std::string msg)
+{
+	Response response;
+	response.setMsg(msg + "\r\n");
+	response.setFd(fd);
+	responses.push(response);
+}
+
+int	Server::getClientFdByNick(std::string nick)
+{
+	std::map<int, Client>::iterator	it;
+
+	for (it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->second.getNick() == nick)
+			return it->second.getFd();
+	}
+	return -1;
+}

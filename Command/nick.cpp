@@ -1,9 +1,10 @@
 #include "../Command/Command.hpp"
+#include "../Server/Server.hpp"
 #include "../Client/Client.hpp"
 #include <set>
 #include <iostream>
 
-void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clients)
+void Server::nick(std::stringstream& ss, Client &currClient)
 {
 	std::cout << "in nick\n";
 
@@ -42,7 +43,13 @@ void nick(std::stringstream& ss, Client &currClient, std::map<int, Client> clien
 	}
 
 	currClient.setNick(nick);
+
 	currClient.setIsNick(true);
+	Response response;
+	std::string msg = "NICK :" + nick;
+	response.setMsg(msg);
+	responses.push(response);
+
 	// oldNick + "!" + root@127.0.0.1 + " NICK :" + nick
 	std::cout << "success nick\n";
 }

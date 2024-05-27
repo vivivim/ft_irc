@@ -50,6 +50,14 @@ class	Server {
 		void	privmsg(std::stringstream& ss);
 		
 		int		getPort();
+		int		getClientFdByNick(std::string nick);
+
+		void	pushResponse(int fd, std::string msg);
+
+		void	pass(std::stringstream& ss, Client& currClient);
+		void	user(std::stringstream& ss, Client& currClient);
+		void	nick(std::stringstream& ss, Client &currClient);
+		void	invite(std::stringstream& ss, Client &currClient);
 };
 
 #endif

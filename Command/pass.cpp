@@ -1,9 +1,10 @@
 #include "../Command/Command.hpp"
+#include "../Server/Server.hpp"
 #include "../Client/Client.hpp"
 
 #include <iostream>
 
-void	pass(std::stringstream& ss, std::string pwd, Client& currClient)
+void	Server::pass(std::stringstream& ss, Client& currClient)
 {
 	std::string	cmd;
 	std::string	input;
