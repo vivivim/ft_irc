@@ -38,17 +38,18 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 		if (charSet.find(nick[i]) != charSet.end())
 		{
 			// ERR_ERRONEUSNICKNAME + oldNick + nick + ERR_ERRONEUSNICKNAME_MSG (:irc.local 432 w : :Erroneous Nickname)
-			return;
+			return ;
 		}
 	}
 
 	currClient.setNick(nick);
 
 	currClient.setIsNick(true);
-	Response response;
+	if (!currClient.getIsConnected())
+		return ;
+
 	std::string msg = "NICK :" + nick;
-	response.setMsg(msg);
-	responses.push(response);
+	pushResponse(currClient.getFd(), msg);
 
 	// oldNick + "!" + root@127.0.0.1 + " NICK :" + nick
 	std::cout << "success nick\n";

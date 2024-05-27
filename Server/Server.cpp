@@ -171,57 +171,12 @@ void	Server::letsGoParsing(Client& currClient)
 	currClient.setMsg("");
 }
 
-void	Server::topic(std::stringstream& ss, Client& currClient)
-{
-	std::string	input;
-	if (!(ss >> input))
-	{
-		//ERR_NOTONCHANNEL(442);
-		return ;
-	}
-	Channel	currChannel = channels[input];
-	
-	if (!(ss >> input))
-	{
-		//ERR_NEEDMOREPARAMS;
-		return ;
-	}
-	if (currChannel.getIsTopicOprOnly() && currClient.getPrefix() != "@")
-	{
-		//ERR_CHANOPRIVSNEEDED(482);
-		return ;
-	}
-	currChannel.setTopic(input);
-	currChannel.setTopicWho(currClient.getNick());
-	currChannel.setTopicTime();
-	//채널에 속한 사람 모두에게 응답 전송
-	std::string	msg = currClient.getNick() + " TOPIC " + currChannel.getName() + " :" + input + "\r\n\r\n";
-	sendMsgToChannel(currChannel, msg);
-}
-
 void	Server::sendMsgToChannel(Channel channel, std::string msg)
 {
 	std::map<int, Client>	whoInChannel = channel.getClients();
 	std::map<int, Client>::iterator	it = whoInChannel.begin();
 	for (; it != whoInChannel.end(); ++it)
 		pushResponse(it->first, msg);
-}
-
-void	Server::privmsg(std::stringstream& ss)
-{
-	std::string	channel;
-	std::string	msg;
-	if (!(ss >> channel))
-	{
-		//무슨 에러?
-		return ;
-	}
-	if (!(ss >> msg))
-	{
-		//이런 일이 있을 수 있나?
-		return ;
-	}
-	sendMsgToChannel(channel, msg);
 }
 
 void	Server::sendResponseMsg()
@@ -263,76 +218,6 @@ void	Server::sendWelcomeMsgToClient(Client& currClient)
 		response.setFd(currClient.getFd());
 		responses.push(response);
 		std::cout << "send welcome\n";
-	}
-}
-
-void	Server::createNewChannel(Client& newbie, std::string channelName)
-{
-	Channel newChannel(channelName);
-	newChannel.plusMemberCount();
-	newChannel.addClient(newbie);
-	newbie.setOperator();
-	this->channels[channelName] = newChannel;
-}
-
-void	Server::joinChannel(Client& newbie, std::string channelName)
-{
-	Channel	curr = channels[channelName];
-	curr.addClient(newbie);
-	curr.plusMemberCount();
-	std::string	msg = "JOIN " + channelName + "/r/n";
-	if (curr.getTopic() != "")
-	{
-		msg += RPL_TOPIC + " " + newbie.getNick() + " " + channelName + " :" + curr.getTopic() + "/r/n";
-		msg += RPL_TOPICWHOTIME + " " + newbie.getNick() + " " + channelName + " " + curr.getTopicWho() + " :" + curr.getTopicTime() + "\r\n";
-	}
-	msg += RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + curr.getClientList() + "\r\n";
-	msg += RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
-	pushResponse(newbie.getFd(), msg);
-	msg = newbie.getNick() + " JOIN :" + channelName + "\r\n\r\n";
-	sendMsgToChannel(channelName, msg);
-
-}
-
-void	Server::join(std::stringstream& ss, Client &currClient)
-{
-	std::string	channelInput;
-
-	if (!(ss >> channelInput))
-	{
-		// ERR_NEEDMOREPARAMS(461);
-		return ;
-	}
-	std::map<std::string, Channel>::iterator	it;
-	it = channels.find(channelInput);
-	if (it == channels.end())
-		createNewChannel(currClient, channelInput);
-	else
-	{
-		{
-			std::string	keyInput;
-			if (!(ss >> keyInput))
-			{
-				//ERR_NEEDMOREPARAMS (461);
-				return ;
-			}
-			if (keyInput != it->second.getKey())
-				return ;
-				//ERR_BADCHANNELKEY(475);
-		}
-		if (it->second.getIsInviteOnly())
-		{
-			if (!it->second.isSheInvited(currClient.getNick()))
-				return ;
-				//ERR_INVITEONLYCHAN(473);
-		}
-		if (it->second.getIsLimit())
-		{
-			if (it->second.getLimits() <= it->second.getMemberCount())
-				return ;
-				//ERR_CHANNELISFULL(471);
-		}
-		joinChannel(currClient, channelInput);
 	}
 }
 

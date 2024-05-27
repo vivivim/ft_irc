@@ -1,7 +1,7 @@
-#include "Command.hpp"
-#include "../Channel/Channel.hpp"
+#include "../Command/Command.hpp"
+#include "../Server/Server.hpp"
 
-void	join(std::stringstream ss, Client &currClient, std::map<std::string, Channel> channels)
+void	Server::join(std::stringstream& ss, Client &currClient)
 {
 	std::string	channelInput;
 
@@ -12,11 +12,10 @@ void	join(std::stringstream ss, Client &currClient, std::map<std::string, Channe
 	}
 	std::map<std::string, Channel>::iterator	it;
 	it = channels.find(channelInput);
-	if (it == channelInput.end())
-		createNewChannel();
+	if (it == channels.end())
+		createNewChannel(currClient, channelInput);
 	else
 	{
-		if (it->second.getIsLock())
 		{
 			std::string	keyInput;
 			if (!(ss >> keyInput))
@@ -34,7 +33,7 @@ void	join(std::stringstream ss, Client &currClient, std::map<std::string, Channe
 				return ;
 				//ERR_INVITEONLYCHAN(473);
 		}
-		if (it->second.isLimit())
+		if (it->second.getIsLimit())
 		{
 			if (it->second.getLimits() <= it->second.getMemberCount())
 				return ;
@@ -42,4 +41,32 @@ void	join(std::stringstream ss, Client &currClient, std::map<std::string, Channe
 		}
 		joinChannel(currClient, channelInput);
 	}
+}
+
+void	Server::createNewChannel(Client& newbie, std::string channelName)
+{
+	Channel newChannel(channelName);
+	newChannel.plusMemberCount();
+	newChannel.addClient(newbie);
+	newbie.setOperator();
+	this->channels[channelName] = newChannel;
+}
+
+void	Server::joinChannel(Client& newbie, std::string channelName)
+{
+	Channel	curr = channels[channelName];
+	curr.addClient(newbie);
+	curr.plusMemberCount();
+	std::string	msg = "JOIN " + channelName + "/r/n";
+	if (curr.getTopic() != "")
+	{
+		msg += RPL_TOPIC + " " + newbie.getNick() + " " + channelName + " :" + curr.getTopic() + "/r/n";
+		msg += RPL_TOPICWHOTIME + " " + newbie.getNick() + " " + channelName + " " + curr.getTopicWho() + " :" + curr.getTopicTime() + "\r\n";
+	}
+	msg += RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + curr.getClientList() + "\r\n";
+	msg += RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
+	pushResponse(newbie.getFd(), msg);
+	msg = newbie.getNick() + " JOIN :" + channelName + "\r\n\r\n";
+	sendMsgToChannel(channelName, msg);
+
 }
