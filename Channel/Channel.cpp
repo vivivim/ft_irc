@@ -1,5 +1,6 @@
 #include "Channel.hpp"
 #include <algorithm>
+#include <ctime>
 #include "../Client/Client.hpp"
 
 Channel::Channel() : memberCount(0), isLock(false), isInviteOnly(false), isTopicOprOnly(false), isLimit(false)
@@ -64,7 +65,8 @@ void		Channel::setTopic(std::string input) { topic = input; }
 void		Channel::setTopicWho(std::string input) { topicWho = input; }
 void		Channel::setTopicTime()
 {
-	time_t	topicTime;
+	std::time_t	now = std::time(NULL);
+	topicTime = now;
 }
 
 std::string	Channel::getName() { return name; }
