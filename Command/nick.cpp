@@ -48,9 +48,9 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	if (!currClient.getIsConnected())
 		return ;
 
-	std::string msg = "NICK :" + nick;
+	// user1!root@127.0.0.1 NICK :u
+	std::string msg = ":" + oldNick + ADR + " NICK :" + nick + "\r\n";
 	pushResponse(currClient.getFd(), msg);
 
-	// oldNick + "!" + root@127.0.0.1 + " NICK :" + nick
 	std::cout << "success nick\n";
 }
