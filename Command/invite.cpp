@@ -54,12 +54,14 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 		return;
 	}
 	
-	// 초대 성공 -> RPL_INVITING : :dan-!d@localhost INVITE Wiz #test (dan-이 채널 test에 Wiz를 초대하는데에 성공함)
+	// 초대 성공
 	channel.addInvited(invitedUser);
-	Response response;
-	std::string msg = "INVITE " + invitedUser + " " + channelName;
-	response.setMsg(msg);
-	responses.push(response);
-
+	// 초대자가 받는 응답 메시지 -> :irc.local 341 user1 user3 :#b 
+	std::string msg = "341 " + currClient.getNick() + " " + invitedUser + " :" + channelName;
+	pushResponse(currClient.getFd(), msg);
+	// 피초대자가 받는 응답 메시지 -> user1!root@127.0.0.1 INVITE user3 :#b
+	std::string msg = "INVITE " + invitedUser + " :" + channelName;
+	pushResponse(getClientFdByNick(invitedUser), msg);
+	
 	std::cout << "success invite\n";
 }
