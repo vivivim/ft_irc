@@ -12,7 +12,8 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 	// 피초대자가 존재하지 않음 -> ERR_NOSUCHNICK (irssi 기준)
 	if (clients.find(currClient.getFd()) == clients.end())
 	{
-		// ERR_NOSUCHNICK
+		std::string msg = "401 " + currClient.getNick() + " " + invitedUser + " :No such nick/channel";
+		pushResponse(currClient.getFd(), msg);
 		return;
 	}
 	
@@ -23,7 +24,8 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 	// 채널이 존재하지 않음 -> ERR_NOSUCHCHANNEL
 	if (channels.find(channelName) == channels.end())
 	{
-		// ERR_NOSUCHCHANNEL
+		std::string msg = "403 " + currClient.getNick() + " " + invitedUser + " :No such channel";
+		pushResponse(currClient.getFd(), msg);
 		return;
 	}
 
@@ -31,21 +33,24 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 	Channel channel = channels.find(channelName)->second;
 	if (!channel.IsUserInChannel(currClient.getNick()))
 	{
-		// ERR_NOTONCHANNEL
+		std::string msg = "442 " + currClient.getNick() + " " + channelName + " :You're not on that channel";
+		pushResponse(currClient.getFd(), msg);
 		return;
 	}
 
 	// inviteOnly인 경우, 초대자가 채널 운영자가 아님 -> ERR_CHANOPRIVSNEEDED
 	if (channel.getIsInviteOnly() && channel.isChanOp(currClient.getNick()))
 	{
-		// ERR_CHANOPRIVSNEEDED
+		std::string msg = "482 " + currClient.getNick() + " " + channelName + " :You're not channel operator";
+		pushResponse(currClient.getFd(), msg);
 		return;
 	}
 
 	// 피초대자가 이미 채널에 존재 -> ERR_USERONCHANNEL
 	if (channel.IsUserInChannel(invitedUser))
 	{
-		// ERR_USERONCHANNEL
+		std::string msg = "443 " + currClient.getNick() + " " + invitedUser + " " + channelName + " :is already on channel";
+		pushResponse(currClient.getFd(), msg);
 		return;
 	}
 	
