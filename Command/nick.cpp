@@ -15,7 +15,9 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	std::string nick;
 	if (!(ss >> nick))
 	{
-		// ERR_NONICKNAMEGIVEN + oldNick + ERR_NONICKNAMEGIVEN_MSG (:irc.local 431 abc :No nickname given)
+		// :irc.local 431 abc :No nickname given
+		std::string msg = IL + " " + ERR_NONICKNAMEGIVEN + " " + oldNick + " " + ERR_NONICKNAMEGIVEN_MSG;
+		pushResponse(currClient.getFd(), msg);
 		return;
 	}
 	
@@ -25,9 +27,11 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	{
 		if (&it->second == &currClient)
 			continue;
-		if (oldNick == nick)
+		if (it->second.getNick() == nick)
 		{
-			// ERR_NICKNAMEINUSE + oldNcik + nick + ERR_NICKNAMEINUSE_MSG (:irc.local 433 origin nick :Nickname is already in use.)
+			// :irc.local 433 origin nick :Nickname is already in use.
+			std::string msg = IL + " " + ERR_NICKNAMEINUSE + " " + oldNick + " " + nick + " " + ERR_NICKNAMEINUSE_MSG;
+			pushResponse(currClient.getFd(), msg);
 			return;
 		}
 	}
@@ -37,7 +41,9 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	for (size_t i = 0; i < nick.size(); ++i) {
 		if (charSet.find(nick[i]) != charSet.end())
 		{
-			// ERR_ERRONEUSNICKNAME + oldNick + nick + ERR_ERRONEUSNICKNAME_MSG (:irc.local 432 w : :Erroneous Nickname)
+			// :irc.local 432 w : :Erroneous Nickname
+			std::string msg = IL + " " + ERR_ERRONEUSNICKNAME + " " + oldNick + " " + nick + " " + ERR_ERRONEUSNICKNAME_MSG;
+			pushResponse(currClient.getFd(), msg);
 			return ;
 		}
 	}
@@ -49,7 +55,7 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 		return ;
 
 	// user1!root@127.0.0.1 NICK :u
-	std::string msg = ":" + oldNick + ADR + " NICK :" + nick + "\r\n";
+	std::string msg = ":" + oldNick + ADR + " NICK :" + nick;
 	pushResponse(currClient.getFd(), msg);
 
 	std::cout << "success nick\n";
