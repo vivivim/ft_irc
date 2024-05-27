@@ -1,29 +1,30 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
+#include <iostream>
 
 void	Server::join(std::stringstream& ss, Client &currClient)
 {
-	std::string	channelInput;
+	std::string	input;
 
-	if (!(ss >> channelInput))
+	if (!(ss >> input))
 	{
 		// ERR_NEEDMOREPARAMS(461);
 		return ;
 	}
 	std::map<std::string, Channel>::iterator	it;
-	it = channels.find(channelInput);
+	it = channels.find(input);
 	if (it == channels.end())
-		createNewChannel(currClient, channelInput);
+		createNewChannel(currClient, input);
 	else
 	{
+		if (it->second.getIsLock())
 		{
-			std::string	keyInput;
-			if (!(ss >> keyInput))
+			if (!(ss >> input))
 			{
 				//ERR_NEEDMOREPARAMS (461);
 				return ;
 			}
-			if (keyInput != it->second.getKey())
+			if (input != it->second.getKey())
 				return ;
 				//ERR_BADCHANNELKEY(475);
 		}
@@ -39,7 +40,7 @@ void	Server::join(std::stringstream& ss, Client &currClient)
 				return ;
 				//ERR_CHANNELISFULL(471);
 		}
-		joinChannel(currClient, channelInput);
+		joinChannel(currClient, it->first);
 	}
 }
 
@@ -50,6 +51,11 @@ void	Server::createNewChannel(Client& newbie, std::string channelName)
 	newChannel.addClient(newbie);
 	newbie.setOperator();
 	this->channels[channelName] = newChannel;
+	
+	std::string	msg = ":" + newbie.getNick() + ADR + " " + "JOIN " + channelName + "\r\n";
+	msg += IL + " " + RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + newChannel.getClientList() + "\r\n";
+	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
+	pushResponse(newbie.getFd(), msg);
 }
 
 void	Server::joinChannel(Client& newbie, std::string channelName)
@@ -57,16 +63,15 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 	Channel	curr = channels[channelName];
 	curr.addClient(newbie);
 	curr.plusMemberCount();
-	std::string	msg = "JOIN " + channelName + "/r/n";
+	std::string	msg = ":" + newbie.getNick() + ADR + " " + "JOIN " + channelName + "\r\n";
 	if (curr.getTopic() != "")
 	{
-		msg += IL + " " + RPL_TOPIC + " " + newbie.getNick() + " " + channelName + " :" + curr.getTopic() + "/r/n";
+		msg += IL + " " + RPL_TOPIC + " " + newbie.getNick() + " " + channelName + " :" + curr.getTopic() + "\r\n";
 		msg += IL + " " + RPL_TOPICWHOTIME + " " + newbie.getNick() + " " + channelName + " " + curr.getTopicWho() + " :" + curr.getTopicTime() + "\r\n";
 	}
 	msg += IL + " " + RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + curr.getClientList() + "\r\n";
 	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
 	pushResponse(newbie.getFd(), msg);
-	msg = newbie.getNick() + " JOIN :" + channelName + "\r\n\r\n";
-	sendMsgToChannel(channelName, msg);
-
+	msg = ":" + newbie.getNick() + ADR + " JOIN :" + channelName + "\r\n\r\n";
+	sendMsgToChannel(curr, msg);
 }

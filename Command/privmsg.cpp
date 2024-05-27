@@ -1,6 +1,6 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
-
+#include <iostream>
 void	Server::privmsg(std::stringstream& ss)
 {
 	std::string	channel;
@@ -15,5 +15,5 @@ void	Server::privmsg(std::stringstream& ss)
 		//이런 일이 있을 수 있나?
 		return ;
 	}
-	sendMsgToChannel(channel, msg);
+	sendMsgToChannel(channels[channel], msg);
 }

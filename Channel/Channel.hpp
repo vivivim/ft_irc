@@ -45,7 +45,7 @@ public:
 	void		setTopicTime();
 
 	std::string	getName();
-	std::map<int, Client>	getClients();
+	std::map<int, Client>&	getClients();
 	std::string	getClientList();
 	int			getMemberCount();
 	int			getLimits();

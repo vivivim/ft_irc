@@ -73,7 +73,7 @@ void		Channel::setTopicTime()
 }
 
 std::string	Channel::getName() { return name; }
-std::map<int, Client>	Channel::getClients() { return clients; }
+std::map<int, Client>&	Channel::getClients() { return clients; }
 std::string	Channel::getClientList()
 {
 	std::string	list;

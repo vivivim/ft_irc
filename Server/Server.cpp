@@ -99,7 +99,6 @@ void	Server::welcomeNewClient()
 	changeEvents(changeList, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);
 	Client	freshClient(clientSocket, "");
 	clients[clientSocket] = freshClient;
-	//rpl_welcome
 }
 
 void	Server::getClientMsg(int currFd)
@@ -173,10 +172,14 @@ void	Server::letsGoParsing(Client& currClient)
 
 void	Server::sendMsgToChannel(Channel channel, std::string msg)
 {
-	std::map<int, Client>	whoInChannel = channel.getClients();
+	std::map<int, Client>&	whoInChannel = channel.getClients();
 	std::map<int, Client>::iterator	it = whoInChannel.begin();
 	for (; it != whoInChannel.end(); ++it)
+	{
+		std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
 		pushResponse(it->first, msg);
+	}
+
 }
 
 void	Server::sendResponseMsg()
@@ -209,14 +212,12 @@ void	Server::sendWelcomeMsgToClient(Client& currClient)
 
 	if (currClient.getIsPass() && currClient.getIsUsername() && currClient.getIsNick() && !currClient.getIsConnected())
 	{
-		Response response;
-		response.setMsg(":irc.local 001 yujin :Welcome to the Localnet IRC Network yujin!localhost@127.0.0.1\r\n");
+		std::string msg = IL + " " + RPL_WELCOME + " " + currClient.getNick() + " :Welcome to the Localnet IRC Network " + currClient.getNick() + ADR + "\r\n\r\n";
 		// response.setMsg(":irc.local 002 yujin :Your host is irc.local, running version ircserv\r\n");
 		// response.setMsg(":irc.local 003 yujin :This server was created 05:49:47 May 19 2024\r\n");
 
 		currClient.setIsConnected(true);
-		response.setFd(currClient.getFd());
-		responses.push(response);
+		pushResponse(currClient.getFd(), msg);
 		std::cout << "send welcome\n";
 	}
 }
