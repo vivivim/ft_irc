@@ -166,6 +166,8 @@ void	Server::letsGoParsing(Client& currClient)
 			privmsg(ss, currClient);
 		else if (cmd == "topic")
 			topic(ss, currClient);
+		else if (cmd == "INVITE")
+			invite(ss, currClient);
 	}
 	currClient.setMsg("");
 }
