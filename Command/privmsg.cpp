@@ -15,5 +15,5 @@ void	Server::privmsg(std::stringstream& ss)
 		//이런 일이 있을 수 있나?
 		return ;
 	}
-	sendMsgToChannel(channels[channel], msg);
+	sendMsgToChannel(channel, msg);
 }

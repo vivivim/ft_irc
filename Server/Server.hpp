@@ -43,7 +43,7 @@ class	Server {
 		void	sendResponseMsg();
 		void	letsGoParsing(Client& currClient);
 		void	sendWelcomeMsgToClient(Client& currClient);
-		void	sendMsgToChannel(Channel channel, std::string msg);
+		void	sendMsgToChannel(std::string channelName, std::string msg);
 
 		void	topic(std::stringstream& ss, Client& currClient);
 		void	join(std::stringstream& ss, Client &currClient);

@@ -170,14 +170,18 @@ void	Server::letsGoParsing(Client& currClient)
 	currClient.setMsg("");
 }
 
-void	Server::sendMsgToChannel(Channel channel, std::string msg)
+void	Server::sendMsgToChannel(std::string channelName, std::string msg)
 {
-	std::map<int, Client>&	whoInChannel = channel.getClients();
-	std::map<int, Client>::iterator	it = whoInChannel.begin();
-	for (; it != whoInChannel.end(); ++it)
+	std::map<int, Client>			whoInChannel = channels[channelName].getClients();
+	Channel channel = channels[channelName];
+	std::map<int, Client>::iterator it;
+	for (it = clients.begin(); it != clients.end(); ++it)
 	{
-		std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
-		pushResponse(it->first, msg);
+		if (channel.IsUserInChannel(it->second.getNick()))
+		{
+			std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
+			pushResponse(it->first, msg);
+		}
 	}
 
 }

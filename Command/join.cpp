@@ -60,9 +60,7 @@ void	Server::createNewChannel(Client& newbie, std::string channelName)
 
 void	Server::joinChannel(Client& newbie, std::string channelName)
 {
-	Channel	curr = channels[channelName];
-	curr.addClient(newbie);
-	curr.plusMemberCount();
+	Channel&	curr = channels[channelName];
 	std::string	msg = ":" + newbie.getNick() + ADR + " " + "JOIN " + channelName + "\r\n";
 	if (curr.getTopic() != "")
 	{
@@ -73,5 +71,14 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
 	pushResponse(newbie.getFd(), msg);
 	msg = ":" + newbie.getNick() + ADR + " JOIN :" + channelName + "\r\n\r\n";
-	sendMsgToChannel(curr, msg);
+	sendMsgToChannel(channelName, msg);
+
+	curr.addClient(newbie);
+	curr.plusMemberCount();
+
+	msg = ":" + newbie.getNick() + ADR + " " + "JOIN " + channelName + "\r\n";
+	msg += IL + " " + RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + curr.getClientList() + "\r\n";
+	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
+	pushResponse(newbie.getFd(), msg);
 }
+

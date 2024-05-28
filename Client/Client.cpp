@@ -4,7 +4,7 @@ Client::Client()
 {
 }
 
-Client::Client(int socket, std::string msg) : fd(socket), msg(msg), prefix(""), nick("new_"), isPass(false), isUsername(false), isNick(false), isConnected(false)
+Client::Client(int socket, std::string msg) : fd(socket), msg(msg), prefix(""), nick("nickname"), isPass(false), isUsername(false), isNick(false), isConnected(false)
 {
 }
 

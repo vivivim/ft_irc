@@ -26,5 +26,5 @@ void	Server::topic(std::stringstream& ss, Client& currClient)
 	currChannel.setTopicTime();
 	//채널에 속한 사람 모두에게 응답 전송
 	std::string	msg = currClient.getNick() + " TOPIC " + currChannel.getName() + " :" + input + "\r\n\r\n";
-	sendMsgToChannel(currChannel, msg);
+	sendMsgToChannel(input, msg);
 }
