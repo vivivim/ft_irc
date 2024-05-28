@@ -163,7 +163,7 @@ void	Server::letsGoParsing(Client& currClient)
 		// else if (cmd == "JOIN :")
 		// 	std::cout << "join";
 		else if (cmd == "PRIVMSG")
-			privmsg(ss);
+			privmsg(ss, currClient);
 		else if (cmd == "topic")
 			topic(ss, currClient);
 	}
@@ -178,6 +178,22 @@ void	Server::sendMsgToChannel(std::string channelName, std::string msg)
 	for (it = clients.begin(); it != clients.end(); ++it)
 	{
 		if (channel.IsUserInChannel(it->second.getNick()))
+		{
+			std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
+			pushResponse(it->first, msg);
+		}
+	}
+
+}
+
+void	Server::sendMsgToChannelExceptMe(std::string channelName, std::string msg, Client except)
+{
+	std::map<int, Client>			whoInChannel = channels[channelName].getClients();
+	Channel channel = channels[channelName];
+	std::map<int, Client>::iterator it;
+	for (it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (channel.IsUserInChannel(it->second.getNick()) && it->second.getNick() != except.getNick())
 		{
 			std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
 			pushResponse(it->first, msg);

@@ -44,10 +44,11 @@ class	Server {
 		void	letsGoParsing(Client& currClient);
 		void	sendWelcomeMsgToClient(Client& currClient);
 		void	sendMsgToChannel(std::string channelName, std::string msg);
+		void	sendMsgToChannelExceptMe(std::string channelName, std::string msg, Client except);
 
 		void	topic(std::stringstream& ss, Client& currClient);
 		void	join(std::stringstream& ss, Client &currClient);
-		void	privmsg(std::stringstream& ss);
+		void	privmsg(std::stringstream& ss, Client currClient);
 		
 		int		getPort();
 		int		getClientFdByNick(std::string nick);

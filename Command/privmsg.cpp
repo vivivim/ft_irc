@@ -1,7 +1,8 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
 #include <iostream>
-void	Server::privmsg(std::stringstream& ss)
+
+void	Server::privmsg(std::stringstream& ss, Client currClient)
 {
 	std::string	channel;
 	std::string	msg;
@@ -15,5 +16,7 @@ void	Server::privmsg(std::stringstream& ss)
 		//이런 일이 있을 수 있나?
 		return ;
 	}
-	sendMsgToChannel(channel, msg);
+	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
+	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + msg;
+	sendMsgToChannelExceptMe(channel, msg, currClient);
 }
