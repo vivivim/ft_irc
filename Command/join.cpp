@@ -76,5 +76,9 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 
 	msg = ":" + newbie.getNick() + ADR + " JOIN :" + channelName + "\r\n\r\n";
 	sendMsgToChannelExceptMe(channelName, msg, newbie);
+	std::map<int, Client>&	who = curr.getClients();
+	std::map<int, Client>::iterator	it = who.begin();
+	for (; it != who.end(); ++it)
+		std::cout << it->second.getNick() << ' ';
 }
 

@@ -36,7 +36,10 @@ public:
 	bool		IsUserInChannel(std::string nickName);
 	void		addInvited(std::string nickName);
 	bool		isChanOp(std::string nickName);
-	
+
+	void		removeClient(int fd);
+	void		clean();
+
 	void		plusMemberCount();
 	void		minusMemberCount();
 

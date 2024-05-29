@@ -38,6 +38,8 @@ class	Server {
 		void	run();
 		void	changeEvents(std::vector<struct kevent>& changeList, uintptr_t ident, int16_t filter, uint16_t flags, uint32_t fflags, intptr_t data, void *udata);
 		void	disconnectClient(int key);
+		void	cleanChannel(std::string input);
+
 		void	welcomeNewClient();
 		void	getClientMsg(int currFd);
 		void	sendResponseMsg();
@@ -45,20 +47,19 @@ class	Server {
 		void	sendWelcomeMsgToClient(Client& currClient);
 		void	sendMsgToChannel(std::string channelName, std::string msg);
 		void	sendMsgToChannelExceptMe(std::string channelName, std::string msg, Client except);
+		void	pushResponse(int fd, std::string msg);
 
-		void	topic(std::stringstream& ss, Client& currClient);
-		void	join(std::stringstream& ss, Client &currClient);
-		void	privmsg(std::stringstream& ss, Client currClient);
-		
 		int		getPort();
 		int		getClientFdByNick(std::string nick);
 
-		void	pushResponse(int fd, std::string msg);
-
 		void	pass(std::stringstream& ss, Client& currClient);
 		void	user(std::stringstream& ss, Client& currClient);
-		void	nick(std::stringstream& ss, Client &currClient);
-		void	invite(std::stringstream& ss, Client &currClient);
+		void	nick(std::stringstream& ss, Client& currClient);
+		void	join(std::stringstream& ss, Client& currClient);
+		void	privmsg(std::stringstream& ss, Client currClient);
+		void	topic(std::stringstream& ss, Client& currClient);
+		void	invite(std::stringstream& ss, Client& currClient);
+		void	part(std::stringstream& ss, Client& currClient);
 };
 
 #endif

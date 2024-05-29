@@ -168,6 +168,8 @@ void	Server::letsGoParsing(Client& currClient)
 			topic(ss, currClient);
 		else if (cmd == "INVITE")
 			invite(ss, currClient);
+		else if (cmd == "PART")
+			part(ss, currClient);
 	}
 	currClient.setMsg("");
 }
@@ -248,6 +250,11 @@ void	Server::disconnectClient(int key)
 {
 	close(key);
 	clients.erase(key);
+}
+
+void	Server::cleanChannel(std::string channelName)
+{
+	channels.erase(channelName);
 }
 
 int		Server::getPort() { return port; }

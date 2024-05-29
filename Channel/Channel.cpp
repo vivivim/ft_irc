@@ -58,6 +58,11 @@ bool	Channel::isChanOp(std::string nickName)
 	return true;
 }
 
+void	Channel::removeClient(int fd)
+{
+	clients.erase(fd);
+	minusMemberCount();
+}
 
 void	Channel::plusMemberCount() { ++memberCount; }
 void	Channel::minusMemberCount() { --memberCount; }
