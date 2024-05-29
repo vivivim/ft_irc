@@ -37,8 +37,7 @@ const std::string ERR_NICKNAMEINUSE = "433";
 const std::string ERR_NICKNAMEINUSE_MSG = ":Nickname is already in use";
 const std::string ERR_NOTONCHANNEL = "442";
 const std::string ERR_NOTONCHANNEL_MSG = ":You're not on that channel";
-const std::string ERR_USERONCHANNEL = "482";
-const std::string ERR_USERONCHANNEL_MSG = ":is already on channel";
-
+const std::string ERR_CHANOPRIVSNEEDED = "482";
+const std::string ERR_CHANOPRIVSNEEDED_MSG = ":is already on channel";
 
 #endif
