@@ -12,12 +12,10 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 		return ;
 	}
 	std::string	tempMsg;
-	while (ss >> msg)
+	while (ss >> msg) //이거 실패할 수도 있나?
 	{
 		tempMsg += msg + " ";
-		//이런 일이 있을 수 있나?
 		std::cout << tempMsg;
-		return ;
 	}
 	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
 	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + tempMsg;
