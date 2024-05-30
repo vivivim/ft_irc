@@ -33,8 +33,8 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		return ;
 	}
 
-	// kick 당하는 닉네임의 클라이언트가 존재하지 않음 401
-	if (!channels[channelName].IsUserInChannel(user))
+	// kick 당하는 닉네임의 클라이언트가 서버 자체에 존재하지 않음 401
+	if (getClientFdByNick(user) == -1)
 	{
 		std::cout << "kicked user " << user << " not in server\n";
 		std::string msg = IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + user + " " + ERR_NOSUCHNICK_MSG;
@@ -52,7 +52,7 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 	}
 
 	// kick 당하는 user가 해당 존재하지 않음 441
-	if (channels[channelName].IsUserInChannel(user))
+	if (!channels[channelName].IsUserInChannel(user))
 	{
 		std::cout << "kicked user not in channel\n";
 		std::string msg = IL + " " + ERR_USERNOTINCHANNEL + " " + currClient.getNick() + " " + user + " " + channelName + " " + ERR_USERNOTINCHANNEL_MSG;
@@ -61,7 +61,7 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 	}
 
 	// currClient가 채널 운영자가 아님 482
-	if (channels[channelName].isChanOp(currClient.getNick()))
+	if (!channels[channelName].isChanOp(currClient.getNick()))
 	{
 		std::cout << "not chanop\n";
 		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG;
