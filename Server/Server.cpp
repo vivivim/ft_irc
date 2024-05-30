@@ -170,6 +170,8 @@ void	Server::letsGoParsing(Client& currClient)
 			invite(ss, currClient);
 		else if (cmd == "PART")
 			part(ss, currClient);
+		else if (cmd == "QUIT")
+			quit(ss, currClient);
 	}
 	currClient.setMsg("");
 }

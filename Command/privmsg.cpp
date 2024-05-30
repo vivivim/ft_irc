@@ -1,6 +1,5 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
-#include <iostream>
 
 void	Server::privmsg(std::stringstream& ss, Client currClient)
 {
@@ -15,7 +14,6 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 	while (ss >> msg) //이거 실패할 수도 있나?
 	{
 		tempMsg += msg + " ";
-		std::cout << tempMsg;
 	}
 	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
 	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + tempMsg;

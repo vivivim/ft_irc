@@ -1,4 +1,5 @@
 #include "../Server/Server.hpp"
+#include "../Utils/Macro.h"
 #include <sstream>
 
 void	Server::part(std::stringstream& ss, Client& currClient)
@@ -19,6 +20,10 @@ void	Server::part(std::stringstream& ss, Client& currClient)
 	{
 		//ERR_NOTONCHANNEL(442);
 	}*/
+	std::string	msg;
+	msg = ":" + currClient.getNick() + ADR + " PART :" + input + "\r\n\r\n";
+	sendMsgToChannel(it->first, msg);
+
 	Channel&	currChannel = it->second;
 	currChannel.removeClient(currClient.getFd());
 	if (!currChannel.getMemberCount())

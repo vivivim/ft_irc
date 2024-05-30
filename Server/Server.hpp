@@ -60,6 +60,7 @@ class	Server {
 		void	topic(std::stringstream& ss, Client& currClient);
 		void	invite(std::stringstream& ss, Client& currClient);
 		void	part(std::stringstream& ss, Client& currClient);
+		void	quit(std::stringstream& ss, Client currClient);
 };
 
 #endif
