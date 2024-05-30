@@ -14,20 +14,17 @@ void	Server::topic(std::stringstream& ss, Client& currClient)
 	if (channels.find(input) == channels.end())
 	{	
 		//ERR_NOSUCHCHANNEL;
-		std::cout << "a\n";
 		return ;
 	}
 
 	Channel&	currChannel = channels[input];
 	if (!(ss >> input))
 	{
-		std::cout << "b\n";
 		//ERR_NEEDMOREPARAMS;
 		return ;
 	}
 	if (currChannel.getIsTopicOprOnly() && currClient.getPrefix() != "@")
 	{
-		std::cout << "c\n";
 		//ERR_CHANOPRIVSNEEDED(482);
 		return ;
 	}
