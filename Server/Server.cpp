@@ -164,7 +164,7 @@ void	Server::letsGoParsing(Client& currClient)
 		// 	std::cout << "join";
 		else if (cmd == "PRIVMSG")
 			privmsg(ss, currClient);
-		else if (cmd == "topic")
+		else if (cmd == "TOPIC")
 			topic(ss, currClient);
 		else if (cmd == "INVITE")
 			invite(ss, currClient);
