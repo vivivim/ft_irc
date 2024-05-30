@@ -59,6 +59,8 @@ class	Server {
 		void	user(std::stringstream& ss, Client& currClient);
 		void	nick(std::stringstream& ss, Client &currClient);
 		void	invite(std::stringstream& ss, Client &currClient);
+		void	kick(std::stringstream& ss, Client &currClient);
+	
 };
 
 #endif

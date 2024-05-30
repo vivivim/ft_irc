@@ -35,9 +35,16 @@ const std::string ERR_ERRONEUSNICKNAME = "432";
 const std::string ERR_ERRONEUSNICKNAME_MSG = ":Erroneus nickname";
 const std::string ERR_NICKNAMEINUSE = "433";
 const std::string ERR_NICKNAMEINUSE_MSG = ":Nickname is already in use";
+const std::string ERR_USERNOTINCHANNEL = "441";
+const std::string ERR_USERNOTINCHANNEL_MSG = ":They aren't on that channel";
 const std::string ERR_NOTONCHANNEL = "442";
 const std::string ERR_NOTONCHANNEL_MSG = ":You're not on that channel";
+const std::string ERR_USERONCHANNEL = "443";
+const std::string ERR_USERONCHANNEL_MSG = ":is already on channel";
+const std::string ERR_NEEDMOREPARAMS = "461";
+const std::string ERR_NEEDMOREPARAMS_MSG = ":Not enough parameters";
 const std::string ERR_CHANOPRIVSNEEDED = "482";
-const std::string ERR_CHANOPRIVSNEEDED_MSG = ":is already on channel";
+const std::string ERR_CHANOPRIVSNEEDED_MSG = ":You're not channel operator";
+
 
 #endif

@@ -168,6 +168,8 @@ void	Server::letsGoParsing(Client& currClient)
 			topic(ss, currClient);
 		else if (cmd == "INVITE")
 			invite(ss, currClient);
+		else if (cmd == "KICK")
+			kick(ss, currClient);
 	}
 	currClient.setMsg("");
 }
