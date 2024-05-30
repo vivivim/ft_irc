@@ -9,10 +9,13 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 
 	while (ss >> tmp)
 		reason += tmp + " ";
-	msg = " ERROR :Closing link: (root@127.0.0.1) [QUIT: " + reason + "]\r\n\r\n";
-	pushResponse(currClient.getFd(), msg);
+
 	msg = ":" + currClient.getNick() + ADR + " QUIT :Quit: " + reason + "\r\n\r\n";
-	//channel이 없는데 우짜지
-//	sendMsgToChannelExceptMe(channel, msg, currClient);
+	std::map<std::string, Channel>::iterator	itChannel;
+	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)
+	{
+		if (itChannel->second.IsUserInChannel(currClient.getNick()))
+			sendMsgToChannelExceptMe(itChannel->second.getName(), msg, currClient);
+	}
 	disconnectClient(currClient.getFd());
 }
