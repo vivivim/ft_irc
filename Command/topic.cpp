@@ -1,5 +1,6 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
+#include <iostream>
 
 void	Server::topic(std::stringstream& ss, Client& currClient)
 {
@@ -7,10 +8,16 @@ void	Server::topic(std::stringstream& ss, Client& currClient)
 	if (!(ss >> input))
 	{
 		//ERR_NOTONCHANNEL(442);
+		//NEEDMOREPARAMS?
 		return ;
 	}
-	Channel	currChannel = channels[input];
-	
+	if (channels.find(input) == channels.end())
+	{	
+		//ERR_NOSUCHCHANNEL;
+		return ;
+	}
+
+	Channel&	currChannel = channels[input];
 	if (!(ss >> input))
 	{
 		//ERR_NEEDMOREPARAMS;
@@ -25,6 +32,6 @@ void	Server::topic(std::stringstream& ss, Client& currClient)
 	currChannel.setTopicWho(currClient.getNick());
 	currChannel.setTopicTime();
 	//채널에 속한 사람 모두에게 응답 전송
-	std::string	msg = currClient.getNick() + " TOPIC " + currChannel.getName() + " :" + input + "\r\n\r\n";
-	sendMsgToChannel(input, msg);
+	std::string	msg = ":" + currClient.getNick() + ADR + " TOPIC " + currChannel.getName() + " " + input + "\r\n\r\n";
+	sendMsgToChannel(currChannel.getName(), msg);
 }

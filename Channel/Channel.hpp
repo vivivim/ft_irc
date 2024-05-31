@@ -37,13 +37,18 @@ public:
 	bool		IsUserInChannel(std::string nickName);
 	void		addInvited(std::string nickName);
 	bool		isChanOp(std::string nickName);
-	
+
+	void		removeClient(int fd);
+	void		clean();
+
 	void		plusMemberCount();
 	void		minusMemberCount();
 
 	void		setTopic(std::string input);
 	void		setTopicWho(std::string input);
 	void		setTopicTime();
+
+	void		addOperator(std::string nickName);
 
 	std::string	getName();
 	std::map<int, Client>&	getClients();

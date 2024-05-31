@@ -58,6 +58,11 @@ bool	Channel::isChanOp(std::string nickName)
 	return true;
 }
 
+void	Channel::removeClient(int fd)
+{
+	clients.erase(fd);
+	minusMemberCount();
+}
 
 void	Channel::plusMemberCount() { ++memberCount; }
 void	Channel::minusMemberCount() { --memberCount; }
@@ -72,6 +77,11 @@ void		Channel::setTopicTime()
 	topicTime = ss.str();
 }
 
+void	Channel::addOperator(std::string nickName)
+{
+	chanOpList.push_back(nickName);
+}
+
 std::string	Channel::getName() { return name; }
 std::map<int, Client>&	Channel::getClients() { return clients; }
 std::string	Channel::getClientList()
@@ -79,7 +89,11 @@ std::string	Channel::getClientList()
 	std::string	list;
 	std::map<int, Client>::iterator	it = clients.begin();
 	for (; it != clients.end(); ++it)
-		list += it->second.getPrefix() + it->second.getNick() + " ";
+	{
+		if (isChanOp(it->second.getNick()))
+			list += "@";
+		list += it->second.getNick() + " ";
+	}
 	return list;
 }
 

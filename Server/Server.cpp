@@ -164,12 +164,18 @@ void	Server::letsGoParsing(Client& currClient)
 		// 	std::cout << "join";
 		else if (cmd == "PRIVMSG")
 			privmsg(ss, currClient);
-		else if (cmd == "topic")
+		else if (cmd == "TOPIC")
 			topic(ss, currClient);
 		else if (cmd == "INVITE")
 			invite(ss, currClient);
 		else if (cmd == "KICK")
 			kick(ss, currClient);
+		else if (cmd == "PART")
+			part(ss, currClient);
+		else if (cmd == "QUIT")
+			quit(ss, currClient);
+		else if (cmd == "PING")
+			ping(ss, currClient);
 	}
 	currClient.setMsg("");
 }
@@ -219,7 +225,10 @@ void	Server::sendResponseMsg()
 			disconnectClient(fd);
 		}
 		else
+		{
+			std::cout << responses.front().getMsg() << std::endl;
 			responses.pop();
+		}
 	}
 }
 
@@ -250,6 +259,11 @@ void	Server::disconnectClient(int key)
 {
 	close(key);
 	clients.erase(key);
+}
+
+void	Server::cleanChannel(std::string channelName)
+{
+	channels.erase(channelName);
 }
 
 int		Server::getPort() { return port; }

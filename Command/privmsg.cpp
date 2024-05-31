@@ -1,6 +1,5 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
-#include <iostream>
 
 void	Server::privmsg(std::stringstream& ss, Client currClient)
 {
@@ -11,12 +10,12 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 		//무슨 에러?
 		return ;
 	}
-	if (!(ss >> msg))
+	std::string	tempMsg;
+	while (ss >> msg) //이거 실패할 수도 있나?
 	{
-		//이런 일이 있을 수 있나?
-		return ;
+		tempMsg += msg + " ";
 	}
 	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
-	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + msg;
+	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + tempMsg;
 	sendMsgToChannelExceptMe(channel, msg, currClient);
 }
