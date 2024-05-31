@@ -47,6 +47,8 @@ public:
 	void		setTopicWho(std::string input);
 	void		setTopicTime();
 
+	void		addOperator(std::string nickName);
+
 	std::string	getName();
 	std::map<int, Client>&	getClients();
 	std::string	getClientList();

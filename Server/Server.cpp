@@ -223,7 +223,10 @@ void	Server::sendResponseMsg()
 			disconnectClient(fd);
 		}
 		else
+		{
+			std::cout << responses.front().getMsg() << std::endl;
 			responses.pop();
+		}
 	}
 }
 
