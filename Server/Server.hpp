@@ -61,6 +61,7 @@ class	Server {
 		void	invite(std::stringstream& ss, Client& currClient);
 		void	part(std::stringstream& ss, Client& currClient);
 		void	quit(std::stringstream& ss, Client currClient);
+		void	ping(std::stringstream& ss, Client currClient);
 };
 
 #endif

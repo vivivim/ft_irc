@@ -172,6 +172,8 @@ void	Server::letsGoParsing(Client& currClient)
 			part(ss, currClient);
 		else if (cmd == "QUIT")
 			quit(ss, currClient);
+		else if (cmd == "PING")
+			ping(ss, currClient);
 	}
 	currClient.setMsg("");
 }
