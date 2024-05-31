@@ -158,24 +158,20 @@ void	Server::letsGoParsing(Client& currClient)
 			nick(ss, currClient);
 		else if (cmd == "JOIN")
 			join(ss, currClient);
-		// else if (cmd == "CAP LS 302")
-		// 	std::cout << "cap ls\n";
-		// else if (cmd == "JOIN :")
-		// 	std::cout << "join";
 		else if (cmd == "PRIVMSG")
 			privmsg(ss, currClient);
 		else if (cmd == "TOPIC")
 			topic(ss, currClient);
 		else if (cmd == "INVITE")
 			invite(ss, currClient);
-		else if (cmd == "KICK")
-			kick(ss, currClient);
 		else if (cmd == "PART")
 			part(ss, currClient);
 		else if (cmd == "QUIT")
 			quit(ss, currClient);
 		else if (cmd == "PING")
 			ping(ss, currClient);
+		else if (cmd == "KICK")
+			kick(ss, currClient);
 	}
 	currClient.setMsg("");
 }

@@ -38,7 +38,6 @@ public:
 	void		addInvited(std::string nickName);
 	bool		isChanOp(std::string nickName);
 
-	void		removeClient(int fd);
 	void		clean();
 
 	void		plusMemberCount();
