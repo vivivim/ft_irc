@@ -32,7 +32,8 @@ public:
 
 	bool		isSheInvited(std::string nick);
 	void		addClient(Client& newbie);
-
+	void		removeClient(int fd);
+	
 	bool		IsUserInChannel(std::string nickName);
 	void		addInvited(std::string nickName);
 	bool		isChanOp(std::string nickName);
