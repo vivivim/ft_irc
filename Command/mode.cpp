@@ -23,8 +23,8 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	Channel& currChannel = channels.find(channelName)->second;
 
 	// mode 옵션이 주어지지 않으면 해당 채널의 정보 반환 -> RPL_CHANNELMODEIS(324) + RPL_CREATIONTIME(329)
-	std::string modeString;
-	if (!(ss >> modeString))
+	std::string opString;
+	if (!(ss >> opString))
 	{
 		std::string msg = IL + " " + RPL_CHANNELMODEIS + " " + currClient.getNick() + " " + channelName + " " + currChannel.modeInfoToString();
 		msg += IL + " " + RPL_CREATIONTIME + " " + currClient.getNick() + " " + channelName + " " + currChannel.getCreatedTime();
@@ -33,64 +33,101 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	}
 
 	// 사용자에게 mode 변경 권한이 없음 -> ERR_CHANOPRIVSNEEDED(482) 
-	if (currChannel.isChanOp(currClient.getNick()))
+	if (!currChannel.isChanOp(currClient.getNick()))
 	{
 		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG;
 		pushResponse(currClient.getFd(), msg);
-		return;
+		return ;
 	}
 
-	std::vector<std::pair<char, char> > op;
-	std::vector<std::string> arg;
-	std::string tmp;
-	while (!(ss >> tmp))
-	{
-		if (tmp[0] == '-' || tmp[0] == '+')
-		{
-			for (int i = 1; i < tmp.length(); ++i)
-				op.push_back(std::make_pair(tmp[0], tmp[i]));
-		}
-		else
-			arg.push_back(tmp);
-	}
+	std::vector<std::string> args;
+	std::string arg;
+	while (ss >> arg)
+		args.push_back(arg);
+
+	std::cout << "opString" << opString << std::endl;
 
 	std::string modeResult;
 	std::string modeResultArg;
 	std::string msg;
-	int j = 0;
-	for (int i = 0; op.size(); i++)
+	bool plus;
+	size_t j = 0;
+	for (size_t i = 0; opString.length(); i++)
 	{
-		bool plus = true;
-		if (op[i].first == '-')
-			plus = false;
-
-		if (op[i].second == 'i' && currChannel.getIsInviteOnly() != plus) //초대받은 사람만 입장 가능
+		if (opString[i] == '-' || opString[i] == '+')
 		{
-			// :user!root@127.0.0.1 MODE #nknk :-i
+			modeResult += opString[i];
+			plus = false;
+			if (opString[i] == '+')
+				plus = true;
+			continue;
+		}
+		if (opString[i] == 'i' && currChannel.getIsInviteOnly() != plus) //초대받은 사람만 입장 가능
+		{
+			std::cout << "i\n";
 			currChannel.setIsInviteOnly(plus);
 			modeResult += "i";
 		}
-		else if (op[i].second == 't' && currChannel.getIsTopicOprOnly() != plus) //op만 TOPIC을 변경 가능
+		else if (opString[i] == 't' && currChannel.getIsTopicOprOnly() != plus) //op만 TOPIC을 변경 가능
+		{
+			std::cout << "t\n";
 			currChannel.setIsTopicOprOnly(plus);
-		else if (op[i].second == 'k' && currChannel.getIsLock() != plus) //채널 비밀번호 설정
+			modeResult += "t";
+		}
+		else if (opString[i] == 'k' && currChannel.getIsLock() != plus) //채널 비밀번호 설정
 		{
+			std::cout << "k\n";
+			if (plus) // 키를 새로 설정할 필요가 있으면 arg확인
+			{
+				if (j >= args.size())
+				{
+					// 알맞은 arg가 필요하다는 오류 메시지
+					// msg += 
+					continue;
+				}
+				std::string newKey = args[j++];
+				currChannel.setKey(newKey);
+				modeResultArg += " " + currChannel.getKey();
+			}
 			currChannel.setIsLock(plus);
-			if (plus)
-				currChannel.setKey(arg[j++]);
-			// else
-			// 	currChannel.setKey("");
+			modeResult += "k";
 		}
-		else if (op[i].second == 'l' && currChannel.getIsLimit() != plus) //채널 최대 인원 설정
+		else if (opString[i] == 'l') //채널 최대 인원 설정
 		{
+			std::cout << "l\n";
+			if (plus) // 최대 인원을 새로 설정할 필요가 있으면 arg확인
+			{
+				if (j >= args.size())
+				{
+					// 알맞은 arg가 필요하다는 오류 메시지
+					// msg += 
+					continue;
+				}
+				std::string limitStr = args[j++];
+				int newLimit = 0;
+				for (size_t i = 0; i < limitStr.length(); ++i)
+				{
+					if ('0' <= limitStr[i] && limitStr[i] <= '9')
+						newLimit += limitStr[i] - '0';
+				}
+				if (currChannel.getLimits() == newLimit) // limit가 그대로면, 응답메시지 작성 필요 없음
+					continue;
+				currChannel.setLimits(newLimit);
+				modeResultArg += " " + currChannel.getlimitsToString(newLimit);
+			}
 			currChannel.setIsLimit(plus);
-			if (plus)
-				currChannel.setLimits(arg[j++]);
-			// else
-			// 	currChannel.setLimit(0);
+			modeResult += "l";
 		}
-		else if (op[i].second == 'o') //해당 닉네임 사용자에게 op권한 제공
+		else if (opString[i] == 'o') //해당 닉네임 사용자에게 op권한 제공
 		{
-			std::string user = arg[j++];
+			std::cout << "o\n";
+			if (j >= args.size())
+			{
+				// 알맞은 arg가 필요하다는 오류 메시지
+				// msg += 
+				continue;
+			}
+			std::string user = args[j++];
 			if (getClientFdByNick(user) == -1) // 존재하지 않는 유저
 			{
 				msg += IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + user + " " + ERR_NOSUCHNICK_MSG;
@@ -98,19 +135,19 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 			}
 			if (currChannel.isChanOp(user) == plus) // 권한을 변경할 필요가 없는 유저
 				continue ;
-			if (op[i].first == '-')
-				currChannel.removeOperator(user);
-			else
+			if (plus)
 				currChannel.addOperator(user);
+			else
+				currChannel.removeOperator(user);
+			modeResult += "o";
+			modeResultArg += " :" + user;
 		}
 		else // 알 수 없는 mode
-		{
-			// :irc.local 472 user f :is not a recognised channel mode.
-			msg += IL + " " + ERR_UNKNOWNMODE + " " + currClient.getNick() + " " + op[i].second + " " + ERR_UNKNOWNMODE_MSG;
-		}
+			msg += IL + " " + ERR_UNKNOWNMODE + " " + currClient.getNick() + " " + opString[i] + " " + ERR_UNKNOWNMODE_MSG;
+		std::cout << "modeResult : " << modeResult << std::endl;
 	}
 	if (!modeResult.empty())
-		msg += ":" + currClient.getNick() + " " + ADR + " MODE " + channelName + " " + modeResult + " :" + modeResultArg;
+		msg += ":" + currClient.getNick() + " " + ADR + " MODE " + channelName + " " + modeResult + modeResultArg;
 
 	pushResponse(currClient.getFd(), msg);
 	std::cout << "success mode\n";

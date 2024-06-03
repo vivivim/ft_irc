@@ -90,16 +90,7 @@ void		Channel::setIsTopicOprOnly(bool TF) { isTopicOprOnly = TF; }
 void		Channel::setIsLock(bool TF) { isLock = TF; }
 void		Channel::setIsLimit(bool TF) { isLimit = TF; }
 void		Channel::setKey(std::string key) { this->key = key; }
-void		Channel::setLimits(std::string limitStr)
-{
-	int num = 0;
-	for (int i = 0; i < limitStr.length(); ++i)
-	{
-		if ('0' <= limitStr[i] && limitStr[i] <= '9')
-			num += limitStr[i] - '0';
-	}
-	this->limits = num;
-}
+void		Channel::setLimits(int limits) { this->limits = limits; }
 
 void	Channel::addOperator(std::string nickName)
 {
@@ -114,6 +105,7 @@ void	Channel::removeOperator(std::string nickName)
 
 std::string	Channel::modeInfoToString()
 {
+	// std::string modeInfo; // +iklt <key> <limits>
 	return " ";
 }
 
@@ -144,3 +136,9 @@ bool		Channel::getIsLimit() { return isLimit; }
 std::string	Channel::getTopicWho() { return topicWho; }
 std::string	Channel::getTopicTime() { return topicTime; }
 std::string	Channel::getCreatedTime() { return createdTime; }
+std::string	Channel::getlimitsToString(int limits)
+{
+	std::stringstream ss;
+	ss << limits;
+	return ss.str();
+}
