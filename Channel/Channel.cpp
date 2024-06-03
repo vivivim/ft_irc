@@ -105,8 +105,30 @@ void	Channel::removeOperator(std::string nickName)
 
 std::string	Channel::modeInfoToString()
 {
-	// std::string modeInfo; // +iklt <key> <limits>
-	return " ";
+	std::string modeInfo; // +iklt <key> <limits>
+	std::string keyStr = "";
+	std::string limitStr = "";
+	modeInfo += "+";
+	if (isInviteOnly)
+		modeInfo += "i";
+	if (isLock)
+	{
+		modeInfo += "k";
+		keyStr = this->key;
+	}
+	if (isLimit)
+	{
+		modeInfo += "l";
+		limitStr += getlimitsToString(this->limits);
+	}
+	if (isTopicOprOnly)
+		modeInfo += "t";
+
+	if (!keyStr.empty())
+		modeInfo += " " + keyStr;
+	if (!limitStr.empty())
+		modeInfo += " " + limitStr;
+	return modeInfo;
 }
 
 

@@ -26,7 +26,7 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	std::string opString;
 	if (!(ss >> opString))
 	{
-		std::string msg = IL + " " + RPL_CHANNELMODEIS + " " + currClient.getNick() + " " + channelName + " " + currChannel.modeInfoToString();
+		std::string msg = IL + " " + RPL_CHANNELMODEIS + " " + currClient.getNick() + " " + channelName + " " + currChannel.modeInfoToString() + "\r\n";
 		msg += IL + " " + RPL_CREATIONTIME + " " + currClient.getNick() + " " + channelName + " " + currChannel.getCreatedTime();
 		pushResponse(currClient.getFd(), msg);
 		return ;
@@ -52,7 +52,7 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	std::string msg;
 	bool plus;
 	size_t j = 0;
-	for (size_t i = 0; opString.length(); i++)
+	for (size_t i = 0; i < opString.length(); i++)
 	{
 		if (opString[i] == '-' || opString[i] == '+')
 		{
@@ -60,9 +60,8 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 			plus = false;
 			if (opString[i] == '+')
 				plus = true;
-			continue;
 		}
-		if (opString[i] == 'i' && currChannel.getIsInviteOnly() != plus) //초대받은 사람만 입장 가능
+		else if (opString[i] == 'i' && currChannel.getIsInviteOnly() != plus) //초대받은 사람만 입장 가능
 		{
 			std::cout << "i\n";
 			currChannel.setIsInviteOnly(plus);
@@ -108,7 +107,9 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 				for (size_t i = 0; i < limitStr.length(); ++i)
 				{
 					if ('0' <= limitStr[i] && limitStr[i] <= '9')
-						newLimit += limitStr[i] - '0';
+						newLimit = newLimit * 10 + limitStr[i] - '0';
+					else
+						break ;
 				}
 				if (currChannel.getLimits() == newLimit) // limit가 그대로면, 응답메시지 작성 필요 없음
 					continue;
