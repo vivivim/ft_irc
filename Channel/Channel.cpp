@@ -77,10 +77,46 @@ void		Channel::setTopicTime()
 	topicTime = ss.str();
 }
 
+void		Channel::setCreatedTime()
+{
+	std::time_t	now = std::time(NULL);
+	std::stringstream ss;
+	ss << now;
+	createdTime = ss.str();
+}
+
+void		Channel::setIsInviteOnly(bool TF) { isInviteOnly = TF; }
+void		Channel::setIsTopicOprOnly(bool TF) { isTopicOprOnly = TF; }
+void		Channel::setIsLock(bool TF) { isLock = TF; }
+void		Channel::setIsLimit(bool TF) { isLimit = TF; }
+void		Channel::setKey(std::string key) { this->key = key; }
+void		Channel::setLimits(std::string limitStr)
+{
+	int num = 0;
+	for (int i = 0; i < limitStr.length(); ++i)
+	{
+		if ('0' <= limitStr[i] && limitStr[i] <= '9')
+			num += limitStr[i] - '0';
+	}
+	this->limits = num;
+}
+
 void	Channel::addOperator(std::string nickName)
 {
 	chanOpList.push_back(nickName);
 }
+
+void	Channel::removeOperator(std::string nickName)
+{
+	std::vector<std::string>::iterator removeIter = std::remove(chanOpList.begin(), chanOpList.end(), nickName);
+	chanOpList.erase(removeIter, chanOpList.end());
+}
+
+std::string	Channel::modeInfoToString()
+{
+	return " ";
+}
+
 
 std::string	Channel::getName() { return name; }
 std::map<int, Client>&	Channel::getClients() { return clients; }
@@ -107,3 +143,4 @@ bool		Channel::getIsTopicOprOnly() { return isTopicOprOnly; }
 bool		Channel::getIsLimit() { return isLimit; }
 std::string	Channel::getTopicWho() { return topicWho; }
 std::string	Channel::getTopicTime() { return topicTime; }
+std::string	Channel::getCreatedTime() { return createdTime; }

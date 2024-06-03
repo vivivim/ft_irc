@@ -63,6 +63,8 @@ class	Server {
 		void	quit(std::stringstream& ss, Client currClient);
 		void	ping(std::stringstream& ss, Client currClient);
 		void	kick(std::stringstream& ss, Client &currClient);
+		void	mode(std::stringstream& ss, Client &currClient);
+
 };
 
 #endif

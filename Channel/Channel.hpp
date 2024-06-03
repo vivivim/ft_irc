@@ -24,6 +24,7 @@ private:
 	bool						isLimit;
 	std::vector<std::string>	invitedPeople;
 	std::vector<std::string>	chanOpList; // 방장 닉네임 리스트
+	std::string					createdTime;
 
 public:
 	Channel();
@@ -46,8 +47,19 @@ public:
 	void		setTopic(std::string input);
 	void		setTopicWho(std::string input);
 	void		setTopicTime();
+	void		setCreatedTime();
+
+	void		setIsInviteOnly(bool TF);
+	void		setIsTopicOprOnly(bool TF);
+	void		setIsLock(bool TF);
+	void		setIsLimit(bool TF);
+	void		setKey(std::string key);
+	void		setLimits(std::string limitStr);
 
 	void		addOperator(std::string nickName);
+	void		removeOperator(std::string nickName);
+
+	std::string	modeInfoToString();
 
 	std::string	getName();
 	std::map<int, Client>&	getClients();
@@ -62,6 +74,7 @@ public:
 	bool		getIsInviteOnly();
 	bool		getIsTopicOprOnly();
 	bool		getIsLimit();
+	std::string	getCreatedTime();
 };
 
 #endif

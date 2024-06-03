@@ -15,6 +15,10 @@ const std::string RPL_YOURHOST = "002";
 const std::string RPL_CREATED = "003";
 const std::string RPL_MYINFO = "004";
 
+// MODE_REPLY
+const std::string RPL_CHANNELMODEIS = "324";
+const std::string RPL_CREATIONTIME = "329";
+
 // JOIN_REPLY
 const std::string RPL_TOPIC = "332";
 const std::string RPL_TOPICWHOTIME = "333";
@@ -43,6 +47,8 @@ const std::string ERR_USERONCHANNEL = "443";
 const std::string ERR_USERONCHANNEL_MSG = ":is already on channel";
 const std::string ERR_NEEDMOREPARAMS = "461";
 const std::string ERR_NEEDMOREPARAMS_MSG = ":Not enough parameters";
+const std::string ERR_UNKNOWNMODE = "472";
+const std::string ERR_UNKNOWNMODE_MSG = ":is unknown mode char to me";
 const std::string ERR_CHANOPRIVSNEEDED = "482";
 const std::string ERR_CHANOPRIVSNEEDED_MSG = ":You're not channel operator";
 
