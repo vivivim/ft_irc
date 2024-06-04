@@ -50,6 +50,7 @@ void	Server::createNewChannel(Client& newbie, std::string channelName)
 	newChannel.plusMemberCount();
 	newChannel.addClient(newbie);
 	newChannel.addOperator(newbie.getNick());
+	newChannel.setCreatedTime();
 	this->channels[channelName] = newChannel;
 	
 	std::string	msg = ":" + newbie.getNick() + ADR + " " + "JOIN " + channelName + "\r\n";

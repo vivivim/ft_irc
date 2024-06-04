@@ -42,7 +42,7 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 	// inviteOnly인 경우, 초대자가 채널 운영자가 아님 -> ERR_CHANOPRIVSNEEDED
 	if (channel.getIsInviteOnly() && channel.isChanOp(currClient.getNick()))
 	{
-		std::string msg = IL + " 482 " + currClient.getNick() + " " + channelName + " :You're not channel operator";
+		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG;
 		pushResponse(currClient.getFd(), msg);
 		return;
 	}

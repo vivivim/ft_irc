@@ -172,6 +172,8 @@ void	Server::letsGoParsing(Client& currClient)
 			ping(ss, currClient);
 		else if (cmd == "KICK")
 			kick(ss, currClient);
+		else if (cmd == "MODE")
+			mode(ss, currClient);
 	}
 	currClient.setMsg("");
 }
