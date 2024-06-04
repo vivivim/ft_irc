@@ -117,6 +117,7 @@ void	Server::getClientMsg(int currFd)
 		else
 		{
 			buf[n] = '\0';
+			//한번으로 끝인데 attach?
 			it->second.attachMsg(buf);
 		}
 		std::cout << it->second.getMsg() << std::endl;

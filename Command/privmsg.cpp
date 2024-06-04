@@ -18,4 +18,6 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
 	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + tempMsg;
 	sendMsgToChannelExceptMe(channel, msg, currClient);
+	if (msg == "letsGoClimbing();")
+		joinBot();
 }
