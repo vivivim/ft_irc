@@ -51,6 +51,9 @@ const std::string ERR_UNKNOWNMODE = "472";
 const std::string ERR_UNKNOWNMODE_MSG = ":is unknown mode char to me";
 const std::string ERR_CHANOPRIVSNEEDED = "482";
 const std::string ERR_CHANOPRIVSNEEDED_MSG = ":You're not channel operator";
-
+const std::string ERR_INVALIDMODEPARAM = "696";
+const std::string ERR_INVALIDMODEPARAM_MSG_LIMIT = " l * :You must specify a parameter for the limit mode. Syntax: <limit>.";
+const std::string ERR_INVALIDMODEPARAM_MSG_KEY = " k * :You must specify a parameter for the key mode. Syntax: <key>.";
+const std::string ERR_INVALIDMODEPARAM_MSG_NICK = " o * :You must specify a parameter for the nick mode. Syntax: <nick>.";
 
 #endif

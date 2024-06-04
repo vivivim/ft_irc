@@ -25,7 +25,6 @@ private:
 	std::vector<std::string>	invitedPeople;
 	std::vector<std::string>	chanOpList; // 방장 닉네임 리스트
 	std::string					createdTime;
-	std::string					modeString;
 
 public:
 	Channel();
