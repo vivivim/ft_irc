@@ -141,7 +141,7 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 				msg += IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + user + " " + ERR_NOSUCHNICK_MSG + "\r\n";
 				continue ;
 			}
-			if (currChannel.isChanOp(user) == plus) // 권한을 변경할 필요가 없는 유저
+			if (currChannel.isChanOp(user) == plus || currChannel.IsUserInChannel(user)) // 권한을 변경할 필요가 없는 유저 또는 채널에 없는 유저
 				continue ;
 			if (plus)
 				currChannel.addOperator(user);
