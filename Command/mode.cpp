@@ -154,15 +154,17 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 			msg += IL + " " + ERR_UNKNOWNMODE + " " + currClient.getNick() + " " + opString[i] + " " + ERR_UNKNOWNMODE_MSG + "\r\n";
 		std::cout << "modeResult : " << modeResult << std::endl;
 	}
+	std::string successMsg;
 	for (size_t i = 0; i < modeResult.length(); ++i)
 	{
 		if (modeResult[i] != '+' && modeResult[i] != '-')
 		{
-			msg += ":" + currClient.getNick() + " " + ADR + " MODE " + channelName + " " + modeResult + modeResultArg + "\r\n";
+			successMsg = ":" + currClient.getNick() + ADR + " MODE " + channelName + " " + modeResult + modeResultArg + "\r\n\r\n";
 			break ;
 		}
 	}
 
 	pushResponse(currClient.getFd(), msg + "\r\n");
+	sendMsgToChannel(channelName, successMsg);
 	std::cout << "success mode\n";
 }
