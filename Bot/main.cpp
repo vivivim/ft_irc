@@ -10,6 +10,7 @@ int	main(int argc, char **argv)
 	}
 	try {
 		Bot bot(argv[1], argv[2]);
+		bot.setClimbCenter();
 		std::cout << "IRC bot is connected on port " << argv[1] << std::endl;
 		bot.run();
 	}
