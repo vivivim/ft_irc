@@ -1,6 +1,8 @@
 #ifndef BOT_HPP
 # define BOT_HPP
 
+#include <string>
+
 class	Bot {
 	private:
 		int botSocket;
@@ -10,6 +12,9 @@ class	Bot {
 		~Bot();
 
 		void	run();
+		void	letsGoParsing(std::string buf);
+		void	introduceBotself(std::stringstream& ss);
+		void	parsingPrivmsg();
 };
 
 #endif
