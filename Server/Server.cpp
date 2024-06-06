@@ -91,9 +91,11 @@ void	Server::welcomeNewClient()
 {
 	int clientSocket = accept(socket.getSocket(), NULL, NULL);
 	if (clientSocket < 0)
+	{
 		std::cerr << "Client accept failed" << std::endl;
-	else
-		std::cout << "Accept client socket " << clientSocket << std::endl;
+		return ;
+	}
+	std::cout << "Accept client socket " << clientSocket << std::endl;
 	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
 	changeEvents(changeList, clientSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
 	changeEvents(changeList, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);
@@ -117,7 +119,7 @@ void	Server::getClientMsg(int currFd)
 		else
 		{
 			buf[n] = '\0';
-			it->second.attachMsg(buf);
+			it->second.setMsg(buf);
 		}
 		std::cout << it->second.getMsg() << std::endl;
 		letsGoParsing(it->second);

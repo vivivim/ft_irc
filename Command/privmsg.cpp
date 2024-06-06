@@ -1,6 +1,8 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
 
+#include <iostream>
+
 void	Server::privmsg(std::stringstream& ss, Client currClient)
 {
 	std::string	channel;
@@ -15,7 +17,15 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 	{
 		tempMsg += msg + " ";
 	}
+	tempMsg.erase(tempMsg.size() - 1);
 	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
-	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + tempMsg;
+	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + tempMsg + "\r\n\r\n";
 	sendMsgToChannelExceptMe(channel, msg, currClient);
+
+	std::cout << "tempMsg : " << tempMsg << std::endl;
+	if (tempMsg == ":letsGoClimbing();")
+	{
+		std::cout << "소환!\n";
+		joinChannel(clients[getClientFdByNick("bot")], channel);
+	}
 }
