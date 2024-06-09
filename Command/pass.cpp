@@ -6,20 +6,26 @@
 
 void	Server::pass(std::stringstream& ss, Client& currClient)
 {
-	std::string	cmd;
+	std::cout << "in pass\n";
 	std::string	input;
 
 	if (currClient.getIsPass())
-		// ERR_ALREADYREGISTRED(462);
-	ss >> cmd;
+	{
+		std::string msg = IL + " " + ERR_ALREADYREGISTRED + " " + currClient.getNick() + " " + ERR_ALREADYREGISTRED_MSG;
+		pushResponse(currClient.getFd(), msg);
+		return ;
+	}
+
 	if (!(ss >> input))
 	{
-		// ERR_NEEDMOREPARAMS(461);
+		std::string msg = IL + " " + ERR_NEEDMOREPARAMS + " " + currClient.getNick() + " " + input + " " + ERR_NEEDMOREPARAMS_MSG;
+		pushResponse(currClient.getFd(), msg);
 		return;
 	}
 	if (input != pwd)
 	{
-		// ERR_PASSWDMISMATCH (464) ":Password incorrect
+		std::string msg = IL + " " + ERR_PASSWDMISMATCH + " " + currClient.getNick() + " " + ERR_PASSWDMISMATCH_MSG;
+		pushResponse(currClient.getFd(), msg);
 		return ;
 	}
 	currClient.setIsPass(true);

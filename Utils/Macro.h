@@ -47,6 +47,12 @@ const std::string ERR_USERONCHANNEL = "443";
 const std::string ERR_USERONCHANNEL_MSG = ":is already on channel";
 const std::string ERR_NEEDMOREPARAMS = "461";
 const std::string ERR_NEEDMOREPARAMS_MSG = ":Not enough parameters";
+const std::string ERR_ALREADYREGISTRED = "462";
+const std::string ERR_ALREADYREGISTRED_MSG = ":You may not reregister";
+const std::string ERR_PASSWDMISMATCH = "464";
+const std::string ERR_PASSWDMISMATCH_MSG = ":Password incorrect";
+
+
 const std::string ERR_UNKNOWNMODE = "472";
 const std::string ERR_UNKNOWNMODE_MSG = ":is unknown mode char to me";
 const std::string ERR_CHANOPRIVSNEEDED = "482";
