@@ -4,43 +4,57 @@
 
 void	Server::join(std::stringstream& ss, Client &currClient)
 {
-	std::string	input;
+	std::string	inputChannels;
 
-	if (!(ss >> input))
+	if (!(ss >> inputChannels))
 	{
-		// ERR_NEEDMOREPARAMS(461);
+		std::string msg = IL + " " + ERR_NEEDMOREPARAMS + " " + currClient.getNick() + " JOIN " + ERR_NEEDMOREPARAMS_MSG;
+		pushResponse(currClient.getFd(), msg);
 		return ;
 	}
-	std::map<std::string, Channel>::iterator	it;
-	it = channels.find(input);
-	if (it == channels.end())
-		createNewChannel(currClient, input);
-	else
+
+	std::string inputKeys;
+	ss >> inputKeys;
+	std::vector<std::string> channelNames = split(inputChannels, ",");
+	std::vector<std::string> keys = split(inputKeys, ",");
+	for (size_t i = 0; i < channelNames.size(); i++)
 	{
-		if (it->second.getIsLock())
+		std::map<std::string, Channel>::iterator	it;
+		it = channels.find(channelNames[i]);
+		if (it == channels.end())
+			createNewChannel(currClient, channelNames[i]);
+		else
 		{
-			if (!(ss >> input))
+			if (it->second.getIsLock())
 			{
-				//ERR_NEEDMOREPARAMS (461);
-				return ;
+				std::cout << it->second.getKey() << " " << keys[i] << std::endl;
+				if (i >= keys.size() || it->second.getKey() != keys[i])
+				{
+					std::string msg = IL + " " + ERR_BADCHANNELKEY + " " + currClient.getNick() + " " + channelNames[i] + " " + ERR_BADCHANNELKEY_MSG;
+					pushResponse(currClient.getFd(), msg);
+					continue ;
+				}
 			}
-			if (input != it->second.getKey())
-				return ;
-				//ERR_BADCHANNELKEY(475);
+			if (it->second.getIsInviteOnly())
+			{
+				if (!it->second.isSheInvited(currClient.getNick()))
+				{
+					std::string msg = IL + " " + ERR_INVITEONLYCHAN + " " + currClient.getNick() + " " + channelNames[i] + " " + ERR_INVITEONLYCHAN_MSG;
+					pushResponse(currClient.getFd(), msg);
+					continue ;
+				}
+			}
+			if (it->second.getIsLimit())
+			{
+				if (it->second.getLimits() <= it->second.getMemberCount())
+				{
+					std::string msg = IL + " " + ERR_CHANNELISFULL + " " + currClient.getNick() + " " + channelNames[i] + " " + ERR_CHANNELISFULL_MSG;
+					pushResponse(currClient.getFd(), msg);
+					continue ;
+				}
+			}
+			joinChannel(currClient, it->first);
 		}
-		if (it->second.getIsInviteOnly())
-		{
-			if (!it->second.isSheInvited(currClient.getNick()))
-				return ;
-				//ERR_INVITEONLYCHAN(473);
-		}
-		if (it->second.getIsLimit())
-		{
-			if (it->second.getLimits() <= it->second.getMemberCount())
-				return ;
-				//ERR_CHANNELISFULL(471);
-		}
-		joinChannel(currClient, it->first);
 	}
 }
 

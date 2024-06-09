@@ -66,5 +66,7 @@ class	Server {
 		void	mode(std::stringstream& ss, Client &currClient);
 
 };
+//util
+std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 
 #endif
