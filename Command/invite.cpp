@@ -31,7 +31,7 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 	}
 
 	// 초대자(currClient)가 채널의 구성원이 아님
-	Channel channel = channels.find(channelName)->second;
+	Channel& channel = channels.find(channelName)->second;
 	if (!channel.IsUserInChannel(currClient.getNick()))
 	{
 		std::string msg = IL + " " + ERR_NOTONCHANNEL + " " + currClient.getNick() + " " + channelName + " " + ERR_NOTONCHANNEL_MSG;
@@ -40,7 +40,7 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 	}
 
 	// inviteOnly인 경우, 초대자가 채널 운영자가 아님 -> ERR_CHANOPRIVSNEEDED
-	if (channel.getIsInviteOnly() && channel.isChanOp(currClient.getNick()))
+	if (channel.getIsInviteOnly() && !channel.isChanOp(currClient.getNick()))
 	{
 		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG;
 		pushResponse(currClient.getFd(), msg);
