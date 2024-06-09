@@ -144,23 +144,23 @@ void	Server::letsGoParsing(Client& currClient)
 			user(ss, currClient);
 		else if (cmd == "NICK")
 			nick(ss, currClient);
-		else if (cmd == "JOIN")
+		else if (cmd == "JOIN" && currClient.getIsConnected())
 			join(ss, currClient);
-		else if (cmd == "PRIVMSG")
+		else if (cmd == "PRIVMSG" && currClient.getIsConnected())
 			privmsg(ss, currClient);
-		else if (cmd == "TOPIC")
+		else if (cmd == "TOPIC" && currClient.getIsConnected())
 			topic(ss, currClient);
-		else if (cmd == "INVITE")
+		else if (cmd == "INVITE" && currClient.getIsConnected())
 			invite(ss, currClient);
-		else if (cmd == "PART")
+		else if (cmd == "PART" && currClient.getIsConnected())
 			part(ss, currClient);
-		else if (cmd == "QUIT")
+		else if (cmd == "QUIT" && currClient.getIsConnected())
 			quit(ss, currClient);
-		else if (cmd == "PING")
+		else if (cmd == "PING" && currClient.getIsConnected())
 			ping(ss, currClient);
-		else if (cmd == "KICK")
+		else if (cmd == "KICK" && currClient.getIsConnected())
 			kick(ss, currClient);
-		else if (cmd == "MODE")
+		else if (cmd == "MODE" && currClient.getIsConnected())
 			mode(ss, currClient);
 	}
 	currClient.setMsg("");
