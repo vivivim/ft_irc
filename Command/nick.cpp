@@ -49,7 +49,6 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	}
 
 	currClient.setNick(nick);
-
 	currClient.setIsNick(true);
 	if (!currClient.getIsConnected())
 	{
