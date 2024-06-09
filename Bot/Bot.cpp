@@ -125,41 +125,39 @@ void	Bot::introduceBotself(std::stringstream& ss)
 	std::cout << "channelName : " << channelName << std::endl;
 	std::vector<std::string> msgSet;
 
-	// msgSet.push_back(" : ___________________________________________________________________\r\n");
-	// msgSet.push_back(" : /								   \\\r\n");
-	// msgSet.push_back(" : \\   안녕하세요? 저는 클라이밍 봇이에요.				      /\r\n");
-	// msgSet.push_back(" : /   함께 클라이밍을 하러 떠나볼까요? 먼저 정보가 필요해요.		       \\\r\n");
-	// msgSet.push_back(" : \\   입력 메시지: #암장추천 <지역> <선호 무브> <실력>			  /\r\n");
-	// sendMsgSet(channelName, msgSet);
-	// msgSet.clear();
-
-	// msgSet.push_back(" : /   지역: 동서남북 / 선호 무브: 1. 2. 3. 4. 5. / 실력: 1(사람) ~ 5(원숭이)    \\\r\n");
-	// msgSet.push_back(" : /   예시) #암장추천 서 3 5					      \\\r\n");
-	// msgSet.push_back(" : \\  _________________________________________________________________/\r\n");
-	// msgSet.push_back(" :| /\r\n");
-	// msgSet.push_back(" : |/\r\n");
-	// msgSet.push_back(" : \r\n");
-	// sendMsgSet(channelName, msgSet);
-
-	msgSet.push_back(" :안녕하세요! 저는 클라이밍 봇이랍니다~\r\n");
-	msgSet.push_back(" :함께 클라이밍을 하러 떠나볼까요? 먼저 정보가 필요해요.\r\n");
-	msgSet.push_back(" :입력 메시지: #암장추천 <지역> <선호 무브> <실력>\r\n");
-	msgSet.push_back(" :지역: 동서남북 / 선호 무브: 1.스태틱 2.코디 3.다이노 4.밸런스 5.오버행 / 실력: 1(사람) ~ 5(원숭이)\r\n");
-	msgSet.push_back(" :주의 사항: 항목 당 하나씩만 입력하세요.\r\n");
-	msgSet.push_back(" :예시) #암장추천 서 3 5\r\n");
+	msgSet.push_back(" : ___________________________________________________________________\r\n");
+	msgSet.push_back(" : /                                                                   \\\r\n");
+	msgSet.push_back(" : \\   안녕하세요? 저는 클라이밍 봇이에요.                                      /\r\n");
+	msgSet.push_back(" : /   함께 클라이밍을 하러 떠나볼까요? 먼저 정보가 필요해요.                       \\\r\n");
+	msgSet.push_back(" : \\   입력 메시지: #암장추천 <지역> <선호 무브> <실력>                          /\r\n");
 	sendMsgSet(channelName, msgSet);
+	msgSet.clear();
 
-	// msgSet.clear();
+	msgSet.push_back(" : /   지역: 동서남북 / 선호 무브: 1. 2. 3. 4. 5. / 실력: 1(사람) ~ 5(원숭이)    \\\r\n");
+	msgSet.push_back(" : \\   예시) #암장추천 서 3 5                                              /\r\n");
+	msgSet.push_back(" : /  _________________________________________________________________\\\r\n");
+	msgSet.push_back(" : | /\r\n");
+	msgSet.push_back(" : |/\r\n");
+	sendMsgSet(channelName, msgSet);
+	msgSet.clear();
 
-	// msgSet.push_back(" :|      __\r\n");
-	// msgSet.push_back(" :| w  c(..)o   (\r\n");
-	// msgSet.push_back(" :|  \\__(-)    __)\r\n");
-	// msgSet.push_back(" :|      /\\   (\r\n");
-	// msgSet.push_back(" :|     /(_)___)\r\n");
-	// msgSet.push_back(" :|       /|\r\n");
-	// msgSet.push_back(" :|      | \\\r\n");
-	// msgSet.push_back(" :|      m  m\r\n");
+	// msgSet.push_back(" :안녕하세요! 저는 클라이밍 봇이랍니다~\r\n");
+	// msgSet.push_back(" :함께 클라이밍을 하러 떠나볼까요? 먼저 정보가 필요해요.\r\n");
+	// msgSet.push_back(" :입력 메시지: #암장추천 <지역> <선호 무브> <실력>\r\n");
+	// msgSet.push_back(" :지역: 동서남북 / 선호 무브: 1.스태틱 2.코디 3.다이노 4.밸런스 5.오버행 / 실력: 1(사람) ~ 5(원숭이)\r\n");
+	// msgSet.push_back(" :주의 사항: 항목 당 하나씩만 입력하세요.\r\n");
+	// msgSet.push_back(" :예시) #암장추천 서 3 5\r\n");
 	// sendMsgSet(channelName, msgSet);
+
+	msgSet.push_back(" :|      __\r\n");
+	msgSet.push_back(" :| w  c(..)o   (\r\n");
+	msgSet.push_back(" :|  \\__(-)    __)\r\n");
+	msgSet.push_back(" :|      /\\   (\r\n");
+	msgSet.push_back(" :|     /(_)___)\r\n");
+	msgSet.push_back(" :|       /|\r\n");
+	msgSet.push_back(" :|      | \\\r\n");
+	msgSet.push_back(" :|      m  m\r\n");
+	sendMsgSet(channelName, msgSet);
 }
 
 void	Bot::parsingPrivmsg(std::stringstream& ss)

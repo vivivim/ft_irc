@@ -6,7 +6,8 @@ void	Server::ping(std::stringstream& ss, Client currClient)
 	std::string	input;
 	if (!(ss >> input))
 	{
-		//ERR_NEEDMOREPARAMS(461);
+		std::string msg = IL + " " + ERR_NEEDMOREPARAMS + " " + currClient.getNick() + " " + ERR_NEEDMOREPARAMS_MSG;
+		pushResponse(currClient.getFd(), msg);
 		return ;
 	}
 
