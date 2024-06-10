@@ -38,7 +38,7 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 	if (channels.find(channelName) == channels.end())
 	{
 		// std::cout << "not exist channel\n";
-		std::string msg = IL + " " + ERR_NOSUCHCHANNEL + " "+ currClient.getNick() +  " " + ERR_NOSUCHCHANNEL_MSG;
+		std::string msg = IL + " " + ERR_NOSUCHCHANNEL + " "+ channelName +  " " + ERR_NOSUCHCHANNEL_MSG;
 		pushResponse(currClient.getFd(), msg);
 		return ;
 	}
@@ -85,7 +85,7 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		}
 		// kick 성공
 		// 채널 사람들이 받는 응답 메시지 :user!root@127.0.0.1 KICK #a yj :
-		std::string msg = ":" + currClient.getNick() + ADR + " KICK " + channelName + " " + user + " " + comment;
+		std::string msg = ":" + currClient.getNick() + ADR + " KICK " + channelName + " " + user + " :" + comment;
 		std::cout << msg << std::endl;
 		sendMsgToChannel(channelName, msg);
 		channels[channelName].removeClient(getClientFdByNick(user));

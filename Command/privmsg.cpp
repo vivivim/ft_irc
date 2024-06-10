@@ -6,24 +6,28 @@
 void	Server::privmsg(std::stringstream& ss, Client currClient)
 {
 	std::string	channel;
-	std::string	msg;
 	if (!(ss >> channel))
 	{
 		//무슨 에러?
 		return ;
 	}
-	std::string	tempMsg;
-	while (ss >> msg) //이거 실패할 수도 있나?
+	std::string comment;
+	if (ss >> comment)
 	{
-		tempMsg += msg + " ";
+		if (comment[0] == ':')
+		{
+			std::string tmp;
+			while (ss >> tmp)
+				comment += " " + tmp;
+			comment.erase(0, 1);
+		}
 	}
-	tempMsg.erase(tempMsg.size() - 1);
 	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
-	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " " + tempMsg + "\r\n\r\n";
+	std::string	msg;
+	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " :" + comment;
 	sendMsgToChannelExceptMe(channel, msg, currClient);
 
-	std::cout << "tempMsg : " << tempMsg << std::endl;
-	if (tempMsg == ":letsGoClimbing();")
+	if (comment == ":letsGoClimbing();")
 	{
 		std::cout << "소환!\n";
 		joinChannel(clients[getClientFdByNick("bot")], channel);

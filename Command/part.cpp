@@ -4,14 +4,25 @@
 
 void	Server::part(std::stringstream& ss, Client& currClient)
 {
-	std::string	input;
-	if (!(ss >> input))
+	std::string	channelName;
+	if (!(ss >> channelName))
 	{
 		std::string msg = IL + " " + ERR_NEEDMOREPARAMS + " " + currClient.getNick() + " " + ERR_NEEDMOREPARAMS_MSG;
 		pushResponse(currClient.getFd(), msg);
 		return ;
 	}
-	std::map<std::string, Channel>::iterator	it = channels.find(input);
+	std::string comment;
+	if (ss >> comment)
+	{
+		if (comment[0] == ':')
+		{
+			std::string tmp;
+			while (ss >> tmp)
+				comment += " " + tmp;
+			comment.erase(0, 1);
+		}
+	}
+	std::map<std::string, Channel>::iterator	it = channels.find(channelName);
 	if (it == channels.end())
 	{
 		std::string msg = IL + " " + ERR_NOSUCHCHANNEL + " " + currClient.getNick() + " " + ERR_NOSUCHCHANNEL_MSG;
@@ -25,11 +36,11 @@ void	Server::part(std::stringstream& ss, Client& currClient)
 		return ;
 	}
 	std::string	msg;
-	msg = ":" + currClient.getNick() + ADR + " PART :" + input + "\r\n\r\n";
+	msg = ":" + currClient.getNick() + "!" + ADR + " PART " + channelName + " :" + comment;
 	sendMsgToChannel(it->first, msg);
 
 	Channel&	currChannel = it->second;
 	currChannel.removeClient(currClient.getFd());
 	if (!currChannel.getMemberCount())
-		cleanChannel(input);
+		cleanChannel(channelName);
 }
