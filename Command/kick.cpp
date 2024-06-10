@@ -89,6 +89,9 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		std::cout << msg << std::endl;
 		sendMsgToChannel(channelName, msg);
 		channels[channelName].removeClient(getClientFdByNick(user));
+
+		if (!(channels[channelName].getMemberCount()))
+			cleanChannel(channelName);
 	}
 
 	std::cout << "success kick\n";
