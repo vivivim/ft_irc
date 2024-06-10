@@ -28,6 +28,8 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 		{
 			sendMsgToChannelExceptMe(itChannel->second.getName(), msg, currClient);
 			itChannel->second.removeClient(currClient.getFd());
+			//remove from invitedPeople;
+			//remove from chanOpList;
 			if (!(itChannel->second.getMemberCount()))
 				cleanChannel(itChannel->second.getName());
 		}
