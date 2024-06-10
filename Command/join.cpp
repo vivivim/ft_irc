@@ -19,10 +19,13 @@ void	Server::join(std::stringstream& ss, Client &currClient)
 	std::vector<std::string> keys = split(inputKeys, ",");
 	for (size_t i = 0; i < channelNames.size(); i++)
 	{
+		std::string chName = channelNames[i];
+		if (channelNames[i][0] != '#')
+			chName = "#" + channelNames[i];
 		std::map<std::string, Channel>::iterator	it;
-		it = channels.find(channelNames[i]);
+		it = channels.find(chName);
 		if (it == channels.end())
-			createNewChannel(currClient, channelNames[i]);
+			createNewChannel(currClient, chName);
 		else
 		{
 			if (it->second.getIsLock())
@@ -30,7 +33,7 @@ void	Server::join(std::stringstream& ss, Client &currClient)
 				std::cout << it->second.getKey() << " " << keys[i] << std::endl;
 				if (i >= keys.size() || it->second.getKey() != keys[i])
 				{
-					std::string msg = IL + " " + ERR_BADCHANNELKEY + " " + currClient.getNick() + " " + channelNames[i] + " " + ERR_BADCHANNELKEY_MSG;
+					std::string msg = IL + " " + ERR_BADCHANNELKEY + " " + currClient.getNick() + " " + chName + " " + ERR_BADCHANNELKEY_MSG;
 					pushResponse(currClient.getFd(), msg);
 					continue ;
 				}
@@ -39,7 +42,7 @@ void	Server::join(std::stringstream& ss, Client &currClient)
 			{
 				if (!it->second.isSheInvited(currClient.getNick()))
 				{
-					std::string msg = IL + " " + ERR_INVITEONLYCHAN + " " + currClient.getNick() + " " + channelNames[i] + " " + ERR_INVITEONLYCHAN_MSG;
+					std::string msg = IL + " " + ERR_INVITEONLYCHAN + " " + currClient.getNick() + " " + chName + " " + ERR_INVITEONLYCHAN_MSG;
 					pushResponse(currClient.getFd(), msg);
 					continue ;
 				}
@@ -48,7 +51,7 @@ void	Server::join(std::stringstream& ss, Client &currClient)
 			{
 				if (it->second.getLimits() <= it->second.getMemberCount())
 				{
-					std::string msg = IL + " " + ERR_CHANNELISFULL + " " + currClient.getNick() + " " + channelNames[i] + " " + ERR_CHANNELISFULL_MSG;
+					std::string msg = IL + " " + ERR_CHANNELISFULL + " " + currClient.getNick() + " " + chName + " " + ERR_CHANNELISFULL_MSG;
 					pushResponse(currClient.getFd(), msg);
 					continue ;
 				}
