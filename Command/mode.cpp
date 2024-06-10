@@ -50,7 +50,7 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	std::string msg;
 	bool plus;
 	size_t j = 0;
-	for (size_t i = 0; i < opString.length(); i++)
+	for (size_t i = 0; i < opString.length(); ++i)
 	{
 		if (opString[i] == '-' || opString[i] == '+')
 		{

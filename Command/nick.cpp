@@ -19,7 +19,13 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 		pushResponse(currClient.getFd(), msg);
 		return;
 	}
-	
+
+	if (nick == "bot")
+	{
+		std::string msg = IL + " " + ERR_NICKNAMEINUSE + " " + oldNick + " " + nick + " " + ERR_NICKNAMEINUSE_MSG;
+		pushResponse(currClient.getFd(), msg);
+		return;
+	}
 	
 	std::map<int, Client>::iterator it;
 	for(it = clients.begin(); it != clients.end(); ++it)
