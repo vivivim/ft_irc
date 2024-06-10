@@ -22,13 +22,16 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		return ;
 	}
 
-	// comment가 존재하는 경우
-	std::string comment = "";
-	std::string commentFirst;
-	if (ss >> commentFirst)
+	std::string comment;
+	if (ss >> comment)
 	{
-		if (commentFirst[0] == ':')
-			comment += commentFirst + " " + ss.str().substr(ss.tellg());
+		if (comment[0] == ':')
+		{
+			std::string tmp;
+			while (ss >> tmp)
+				comment += " " + tmp;
+			comment.erase(0, 1);
+		}
 	}
 
 	// 채널이 존재하지 않음 403
