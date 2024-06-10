@@ -26,9 +26,9 @@ bool		Channel::isSheInvited(std::string nick)
 	return false;
 }
 
-void		Channel::addClient(Client& newbie)
+void	Channel::addClient(Client& newbie)
 {
-	this->clients[newbie.getFd()] = newbie;
+	clients[newbie.getFd()] = newbie;
 }
 
 bool	Channel::IsUserInChannel(std::string nickName)

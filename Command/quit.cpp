@@ -27,6 +27,7 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 		if (itChannel->second.IsUserInChannel(currClient.getNick()))
 		{
 			sendMsgToChannelExceptMe(itChannel->second.getName(), msg, currClient);
+			itChannel->second.removeClient(currClient.getFd());
 			if (!(itChannel->second.getMemberCount()))
 				cleanChannel(itChannel->second.getName());
 		}
