@@ -25,6 +25,7 @@ private:
 	std::vector<std::string>	invitedPeople;
 	std::vector<std::string>	chanOpList; // 방장 닉네임 리스트
 	std::string					createdTime;
+	bool						isExistTopic;
 
 public:
 	Channel();
@@ -55,6 +56,7 @@ public:
 	void		setIsLimit(bool TF);
 	void		setKey(std::string key);
 	void		setLimits(int limits);
+	void		setIsExistTopic(bool TF);
 
 	void		addOperator(std::string nickName);
 	void		removeOperator(std::string nickName);
@@ -76,6 +78,7 @@ public:
 	bool		getIsLimit();
 	std::string	getCreatedTime();
 	std::string	getlimitsToString(int limits);
+	bool		getIsExistTopic();
 };
 
 #endif

@@ -8,7 +8,7 @@ Channel::Channel() : memberCount(0), isLock(false), isInviteOnly(false), isTopic
 {
 }
 
-Channel::Channel(std::string name) : name(name), memberCount(0), isLock(false), isInviteOnly(false), isTopicOprOnly(false), isLimit(false)
+Channel::Channel(std::string name) : name(name), memberCount(0), isLock(false), isInviteOnly(false), isTopicOprOnly(false), isLimit(false), isExistTopic(false)
 {
 }
 
@@ -91,6 +91,7 @@ void		Channel::setIsLock(bool TF) { isLock = TF; }
 void		Channel::setIsLimit(bool TF) { isLimit = TF; }
 void		Channel::setKey(std::string key) { this->key = key; }
 void		Channel::setLimits(int limits) { this->limits = limits; }
+void		Channel::setIsExistTopic(bool TF) { this->isExistTopic = TF; }
 
 void	Channel::addOperator(std::string nickName)
 {
@@ -164,3 +165,5 @@ std::string	Channel::getlimitsToString(int limits)
 	ss << limits;
 	return ss.str();
 }
+
+bool	Channel::getIsExistTopic() { return isExistTopic; }
