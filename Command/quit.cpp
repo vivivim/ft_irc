@@ -1,6 +1,8 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
 
+#include <iostream>
+
 void	Server::quit(std::stringstream& ss, Client currClient)
 {
 	std::string	reason;
@@ -22,17 +24,21 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 		reason = reason.substr(1);
 	msg = ":" + currClient.getNick() + ADR + " QUIT :Quit: " + reason;
 	std::map<std::string, Channel>::iterator	itChannel;
+	std::vector<std::string>	removeCh;
 	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)
 	{
-		if (itChannel->second.IsUserInChannel(currClient.getNick()))
+		if (itChannel->second.IsUserInChannel(currClient.getNick())) //여기
 		{
 			sendMsgToChannelExceptMe(itChannel->second.getName(), msg, currClient);
 			itChannel->second.removeClient(currClient.getFd());
 			//remove from invitedPeople;
 			//remove from chanOpList;
 			if (!(itChannel->second.getMemberCount()))
-				cleanChannel(itChannel->second.getName());
+				removeCh.push_back(itChannel->second.getName());
 		}
 	}
+	std::vector<std::string>::iterator it;
+	for (it = removeCh.begin(); it != removeCh.end(); ++it)
+		cleanChannel(*it);
 	disconnectClient(currClient.getFd());
 }
