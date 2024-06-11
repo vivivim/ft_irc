@@ -43,7 +43,7 @@ Bot::Bot(char *portStr, char *pwdChar)
 	{
 		//실패 시 종료? 아니면 계속 시도? 어떻게?
 	}
-	msg = "NICK bot\r\n";
+	msg = "NICK bot something\r\n";
 	if (send(botSocket, msg.c_str(), msg.size(), 0) < 0)
 		;
 	msg = "USER bot\r\n";
@@ -96,7 +96,10 @@ void	Bot::run()
 		int n = read(botSocket, buf, sizeof(buf));
 		std::string	readMsg;
 		if (n < 0)
+		{
 			throw	std::runtime_error("Error: Read failed");
+			break;
+		}
 		else
 			buf[n] = '\0';
 		std::cout << "readMsg: " << buf << std::endl;
