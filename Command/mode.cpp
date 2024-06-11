@@ -13,6 +13,9 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	if (!(ss >> channelName))
 		return ;
 
+	if (channelName[0] != '#') // 채널명이 아닌 경우(user mode가 오는 경우 방지)
+		return ;
+
 	// 채널이 존재하지 않음 -> ERR_NOSUCHCHANNEL
 	if (channels.find(channelName) == channels.end())
 	{
