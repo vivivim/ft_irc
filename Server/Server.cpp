@@ -119,7 +119,7 @@ void	Server::getClientMsg(int currFd)
 		else
 		{
 			buf[n] = '\0';
-			it->second.setMsg(buf);
+			it->second.attachMsg(buf);
 		}
 		std::cout << it->second.getMsg() << std::endl;
 		letsGoParsing(it->second);
@@ -130,6 +130,8 @@ void	Server::getClientMsg(int currFd)
 
 void	Server::letsGoParsing(Client& currClient)
 {
+	if (currClient.getMsg().find("\n") == std::string::npos)
+		return ;
 	std::string delimiter = "\r\n";
 	std::string	cmd;
 	std::vector<std::string> tokens = split(currClient.getMsg(), delimiter);
