@@ -5,12 +5,14 @@
 
 void	Server::privmsg(std::stringstream& ss, Client currClient)
 {
-	std::string	channel;
-	if (!(ss >> channel))
+	std::string	dest;
+	if (!(ss >> dest))
 	{
-		//무슨 에러?
+		std::string msg = IL + " " + ERR_NEEDMOREPARAMS + " " + currClient.getNick() + " PRIVMSG " + ERR_NEEDMOREPARAMS_MSG;
+		pushResponse(currClient.getFd(), msg);
 		return ;
 	}
+
 	std::string comment;
 	if (ss >> comment)
 	{
@@ -22,14 +24,22 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 			comment.erase(0, 1);
 		}
 	}
+
+
 	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
 	std::string	msg;
-	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + channel + " :" + comment;
-	sendMsgToChannelExceptMe(channel, msg, currClient);
+	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + dest + " :" + comment;
 
-	if (comment == ":letsGoClimbing();")
+	//존재하지않는채널&유저 예외처리
+	if (dest[0] == '#')
 	{
-		std::cout << "소환!\n";
-		joinChannel(clients[getClientFdByNick("bot")], channel);
+		sendMsgToChannelExceptMe(dest, msg, currClient);
+		if (comment == ":letsGoClimbing();")
+		{
+			std::cout << "소환!\n";
+			joinChannel(clients[getClientFdByNick("bot")], dest);
+		}
 	}
+	else
+		sendMsgToUser(dest, msg);
 }

@@ -182,6 +182,11 @@ void	Server::sendMsgToChannel(std::string channelName, std::string msg)
 
 }
 
+void	Server::sendMsgToUser(std::string dest, std::string msg)
+{
+	pushResponse(getClientFdByNick(dest), msg);
+}
+
 void	Server::sendMsgToChannelExceptMe(std::string channelName, std::string msg, Client except)
 {
 	std::map<int, Client>			whoInChannel = channels[channelName].getClients();

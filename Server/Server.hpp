@@ -46,6 +46,7 @@ class	Server {
 		void	letsGoParsing(Client& currClient);
 		void	sendWelcomeMsgToClient(Client& currClient);
 		void	sendMsgToChannel(std::string channelName, std::string msg);
+		void	sendMsgToUser(std::string dest, std::string msg);
 		void	sendMsgToChannelExceptMe(std::string channelName, std::string msg, Client except);
 		void	pushResponse(int fd, std::string msg);
 
