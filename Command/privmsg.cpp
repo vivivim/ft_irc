@@ -5,8 +5,8 @@
 
 void	Server::privmsg(std::stringstream& ss, Client currClient)
 {
-	std::string	dest;
-	if (!(ss >> dest))
+	std::string	input;
+	if (!(ss >> input))
 	{
 		std::string msg = IL + " " + ERR_NEEDMOREPARAMS + " " + currClient.getNick() + " PRIVMSG " + ERR_NEEDMOREPARAMS_MSG;
 		pushResponse(currClient.getFd(), msg);
@@ -25,34 +25,37 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 		}
 	}
 
-	// :user2!root@127.0.0.1 PRIVMSG #chan :hi
+	std::vector<std::string> dests = split(input, ",");
 	std::string	msg;
-	msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + dest + " :" + comment;
+	for (size_t i = 0; i < dests.size(); ++i)
+	{
+		std::string dest = dests[i];
+		msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + dest + " :" + comment;
 
-	//존재하지않는채널&유저 예외처리
-	if (dest[0] == '#')
-	{
-		if (channels.find(dest) == channels.end())
+		if (dest[0] == '#')
 		{
-			std::string msg = IL + " " + ERR_NOSUCHCHANNEL + " "+ dest +  " " + ERR_NOSUCHCHANNEL_MSG;
-			pushResponse(currClient.getFd(), msg);
-			return ;
+			if (channels.find(dest) == channels.end())
+			{
+				msg = IL + " " + ERR_NOSUCHCHANNEL + " "+ dest +  " " + ERR_NOSUCHCHANNEL_MSG;
+				pushResponse(currClient.getFd(), msg);
+				continue ;
+			}
+			sendMsgToChannelExceptMe(dest, msg, currClient);
+			if (comment == ":letsGoClimbing();")
+			{
+				std::cout << "소환!\n";
+				joinChannel(clients[getClientFdByNick("bot")], dest);
+			}
 		}
-		sendMsgToChannelExceptMe(dest, msg, currClient);
-		if (comment == ":letsGoClimbing();")
+		else
 		{
-			std::cout << "소환!\n";
-			joinChannel(clients[getClientFdByNick("bot")], dest);
+			if (getClientFdByNick(dest) == -1)
+			{
+				msg = IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + dest + " " + ERR_NOSUCHNICK_MSG;
+				pushResponse(currClient.getFd(), msg);
+				continue ;
+			}
+			sendMsgToUser(dest, msg);
 		}
-	}
-	else
-	{
-		if (getClientFdByNick(dest) == -1)
-		{
-			std::string msg = IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + dest + " " + ERR_NOSUCHNICK_MSG;
-			pushResponse(currClient.getFd(), msg);
-			return ;
-		}
-		sendMsgToUser(dest, msg);
 	}
 }
