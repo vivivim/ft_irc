@@ -17,10 +17,10 @@ Channel::~Channel()
 
 }
 
-bool		Channel::isSheInvited(std::string nick)
+bool		Channel::isSheInvited(int fd)
 {
-	std::vector<std::string>::iterator	it;
-	it = find(invitedPeople.begin(), invitedPeople.end(), nick);
+	std::vector<int>::iterator	it;
+	it = find(invitedPeople.begin(), invitedPeople.end(), fd);
 	if (it != invitedPeople.end())
 		return true;
 	return false;
@@ -31,29 +31,29 @@ void	Channel::addClient(Client& newbie)
 	clients[newbie.getFd()] = newbie;
 }
 
-bool	Channel::IsUserInChannel(std::string nickName)
+bool	Channel::IsUserInChannel(int fd)
 {
 	std::map<int, Client>::iterator it;
 	for (it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (it->second.getNick() == nickName)
+		if (it->second.getFd() == fd)
 			return true;
 	}
 	return false;
 }
 
-void	Channel::addInvited(std::string nickName)
+void	Channel::addInvited(int fd)
 {
 	// invite 메시지를 여러번 보낼 수 있어서 리스트 중복 체크
-	if (std::find(invitedPeople.begin(), invitedPeople.end(), nickName) == invitedPeople.end())
+	if (std::find(invitedPeople.begin(), invitedPeople.end(), fd) == invitedPeople.end())
 	{
-		invitedPeople.push_back(nickName);
+		invitedPeople.push_back(fd);
 	}
 }
 
-bool	Channel::isChanOp(std::string nickName)
+bool	Channel::isChanOp(int fd)
 {
-	if (std::find(chanOpList.begin(), chanOpList.end(), nickName) == chanOpList.end())
+	if (std::find(chanOpList.begin(), chanOpList.end(), fd) == chanOpList.end())
 		return false;
 	return true;
 }
@@ -93,14 +93,14 @@ void		Channel::setKey(std::string key) { this->key = key; }
 void		Channel::setLimits(int limits) { this->limits = limits; }
 void		Channel::setIsExistTopic(bool TF) { this->isExistTopic = TF; }
 
-void	Channel::addOperator(std::string nickName)
+void	Channel::addOperator(int fd)
 {
-	chanOpList.push_back(nickName);
+	chanOpList.push_back(fd);
 }
 
-void	Channel::removeOperator(std::string nickName)
+void	Channel::removeOperator(int fd)
 {
-	std::vector<std::string>::iterator removeIter = std::remove(chanOpList.begin(), chanOpList.end(), nickName);
+	std::vector<int>::iterator removeIter = std::remove(chanOpList.begin(), chanOpList.end(), fd);
 	chanOpList.erase(removeIter, chanOpList.end());
 }
 
@@ -141,7 +141,7 @@ std::string	Channel::getClientList()
 	std::map<int, Client>::iterator	it = clients.begin();
 	for (; it != clients.end(); ++it)
 	{
-		if (isChanOp(it->second.getNick()))
+		if (isChanOp(it->second.getFd()))
 			list += "@";
 		list += it->second.getNick() + " ";
 	}

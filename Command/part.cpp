@@ -29,7 +29,7 @@ void	Server::part(std::stringstream& ss, Client& currClient)
 		pushResponse(currClient.getFd(), msg);
 		return ;
 	}
-	if (!(it->second.IsUserInChannel(currClient.getNick())))
+	if (!(it->second.IsUserInChannel(currClient.getFd())))
 	{
 		std::string msg = IL + " " + ERR_NOTONCHANNEL + " " + currClient.getNick() + " " + ERR_NOTONCHANNEL_MSG;
 		pushResponse(currClient.getFd(), msg);

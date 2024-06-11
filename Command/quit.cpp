@@ -27,7 +27,7 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 	std::vector<std::string>	removeCh;
 	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)
 	{
-		if (itChannel->second.IsUserInChannel(currClient.getNick())) //여기
+		if (itChannel->second.IsUserInChannel(currClient.getFd())) //여기
 		{
 			sendMsgToChannelExceptMe(itChannel->second.getName(), msg, currClient);
 			itChannel->second.removeClient(currClient.getFd());

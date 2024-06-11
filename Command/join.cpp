@@ -40,7 +40,7 @@ void	Server::join(std::stringstream& ss, Client &currClient)
 			}
 			if (it->second.getIsInviteOnly())
 			{
-				if (!it->second.isSheInvited(currClient.getNick()))
+				if (!it->second.isSheInvited(currClient.getFd()))
 				{
 					std::string msg = IL + " " + ERR_INVITEONLYCHAN + " " + currClient.getNick() + " " + chName + " " + ERR_INVITEONLYCHAN_MSG;
 					pushResponse(currClient.getFd(), msg);
@@ -66,7 +66,7 @@ void	Server::createNewChannel(Client& newbie, std::string channelName)
 	Channel newChannel(channelName);
 	newChannel.plusMemberCount();
 	newChannel.addClient(newbie);
-	newChannel.addOperator(newbie.getNick());
+	newChannel.addOperator(newbie.getFd());
 	newChannel.setCreatedTime();
 	this->channels[channelName] = newChannel;
 	

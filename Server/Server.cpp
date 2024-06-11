@@ -173,7 +173,7 @@ void	Server::sendMsgToChannel(std::string channelName, std::string msg)
 	std::map<int, Client>::iterator it;
 	for (it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (channel.IsUserInChannel(it->second.getNick()))
+		if (channel.IsUserInChannel(it->second.getFd()))
 		{
 			std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
 			pushResponse(it->first, msg);
@@ -194,7 +194,7 @@ void	Server::sendMsgToChannelExceptMe(std::string channelName, std::string msg, 
 	std::map<int, Client>::iterator it;
 	for (it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (channel.IsUserInChannel(it->second.getNick()) && it->second.getNick() != except.getNick())
+		if (channel.IsUserInChannel(it->second.getFd()) && it->second.getNick() != except.getNick())
 		{
 			std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
 			pushResponse(it->first, msg);
