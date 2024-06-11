@@ -37,7 +37,7 @@ void	Server::topic(std::stringstream& ss, Client& currClient)
 			topic += " " + tmp;
 		topic.erase(0, 1);
 	}
-	if (currChannel.getIsTopicOprOnly() && currChannel.isChanOp(currClient.getNick()))
+	if (currChannel.getIsTopicOprOnly() && currChannel.isChanOp(currClient.getFd()))
 	{
 		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG;
 		pushResponse(currClient.getFd(), msg);

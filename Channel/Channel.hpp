@@ -22,8 +22,8 @@ private:
 	bool						isInviteOnly;
 	bool						isTopicOprOnly;
 	bool						isLimit;
-	std::vector<std::string>	invitedPeople;
-	std::vector<std::string>	chanOpList; // 방장 닉네임 리스트
+	std::vector<int>	invitedPeople;
+	std::vector<int>	chanOpList; // 방장 닉네임 리스트
 	std::string					createdTime;
 	bool						isExistTopic;
 
@@ -32,13 +32,13 @@ public:
 	Channel(std::string);
 	~Channel();
 
-	bool		isSheInvited(std::string nick);
+	bool		isSheInvited(int fd);
 	void		addClient(Client& newbie);
 	void		removeClient(int fd);
 	
-	bool		IsUserInChannel(std::string nickName);
-	void		addInvited(std::string nickName);
-	bool		isChanOp(std::string nickName);
+	bool		IsUserInChannel(int fd);
+	void		addInvited(int fd);
+	bool		isChanOp(int fd);
 
 	void		clean();
 
@@ -58,8 +58,8 @@ public:
 	void		setLimits(int limits);
 	void		setIsExistTopic(bool TF);
 
-	void		addOperator(std::string nickName);
-	void		removeOperator(std::string nickName);
+	void		addOperator(int fd);
+	void		removeOperator(int fd);
 
 	std::string	modeInfoToString();
 

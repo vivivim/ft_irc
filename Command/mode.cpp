@@ -36,7 +36,7 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	}
 
 	// 사용자에게 mode 변경 권한이 없음 -> ERR_CHANOPRIVSNEEDED(482) 
-	if (!currChannel.isChanOp(currClient.getNick()))
+	if (!currChannel.isChanOp(currClient.getFd()))
 	{
 		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG + "\r\n\r\n";
 		pushResponse(currClient.getFd(), msg);
@@ -144,12 +144,12 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 				msg += IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + user + " " + ERR_NOSUCHNICK_MSG + "\r\n";
 				continue ;
 			}
-			if (currChannel.isChanOp(user) == plus || currChannel.IsUserInChannel(user)) // 권한을 변경할 필요가 없는 유저 또는 채널에 없는 유저
+			if (currChannel.isChanOp(currClient.getFd()) == plus || currChannel.IsUserInChannel(currClient.getFd())) // 권한을 변경할 필요가 없는 유저 또는 채널에 없는 유저
 				continue ;
 			if (plus)
-				currChannel.addOperator(user);
+				currChannel.addOperator(currClient.getFd());
 			else
-				currChannel.removeOperator(user);
+				currChannel.removeOperator(currClient.getFd());
 			modeResult += "o";
 			modeResultArg += " :" + user;
 		}
