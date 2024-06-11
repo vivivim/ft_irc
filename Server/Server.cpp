@@ -137,7 +137,6 @@ void	Server::letsGoParsing(Client& currClient)
 	std::vector<std::string> tokens = split(currClient.getMsg(), delimiter);
 
 	for (size_t i = 0; i < tokens.size() && !tokens[i].empty(); ++i) {
-		//std::cout << i << " " << tokens[i] << std::endl;
 		std::stringstream	ss(tokens[i]);
 		ss >> cmd;
 		if (cmd == "PASS")
@@ -227,20 +226,9 @@ void	Server::sendResponseMsg()
 
 void	Server::sendWelcomeMsgToClient(Client& currClient)
 {
-	// if (!currClient.getIsPass() && !currClient.getIsUsername() && !currClient.getIsNick() && !currClient.getIsConnected())
-	// {
-	// 	Response response;
-	// 	response.setMsg("NOTICE * :*** Looking up your hostname...\r\n451 * JOIN :You have not registered.\r\n\r\n");
-	// 	response.setFd(currClient.getFd());
-	// 	responses.push(response);
-	// 	std::cout << "send welcome\n";
-	// }
-
 	if (currClient.getIsPass() && currClient.getIsUsername() && currClient.getIsNick() && !currClient.getIsConnected())
 	{
 		std::string msg = IL + " " + RPL_WELCOME + " " + currClient.getNick() + " :Welcome to the Localnet IRC Network " + currClient.getNick() + ADR + "\r\n\r\n";
-		// response.setMsg(":irc.local 002 yujin :Your host is irc.local, running version ircserv\r\n");
-		// response.setMsg(":irc.local 003 yujin :This server was created 05:49:47 May 19 2024\r\n");
 
 		currClient.setIsConnected(true);
 		pushResponse(currClient.getFd(), msg);

@@ -37,7 +37,6 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 	// 채널이 존재하지 않음 403
 	if (channels.find(channelName) == channels.end())
 	{
-		// std::cout << "not exist channel\n";
 		std::string msg = IL + " " + ERR_NOSUCHCHANNEL + " "+ channelName +  " " + ERR_NOSUCHCHANNEL_MSG;
 		pushResponse(currClient.getFd(), msg);
 		return ;
@@ -51,7 +50,6 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		// kick 당하는 닉네임의 클라이언트가 서버 자체에 존재하지 않음 401
 		if (getClientFdByNick(user) == -1)
 		{
-			// std::cout << "kicked user " << user << " not in server\n";
 			std::string msg = IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + user + " " + ERR_NOSUCHNICK_MSG;
 			pushResponse(currClient.getFd(), msg);
 			continue;
@@ -60,7 +58,6 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		// currClient가 해당 채널에 존재하지 않음 442
 		if (!channels[channelName].IsUserInChannel(currClient.getFd()))
 		{
-			// std::cout << "curr user not in channel\n";
 			std::string msg = IL + " " + ERR_NOTONCHANNEL + " " + currClient.getNick() + " " + channelName + " " + ERR_NOTONCHANNEL_MSG;
 			pushResponse(currClient.getFd(), msg);
 			continue;
@@ -69,7 +66,6 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		// kick 당하는 user가 해당 존재하지 않음 441
 		if (!channels[channelName].IsUserInChannel(currClient.getFd()))
 		{
-			// std::cout << "kicked user not in channel\n";
 			std::string msg = IL + " " + ERR_USERNOTINCHANNEL + " " + currClient.getNick() + " " + user + " " + channelName + " " + ERR_USERNOTINCHANNEL_MSG;
 			pushResponse(currClient.getFd(), msg);
 			continue;
@@ -78,7 +74,6 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		// currClient가 채널 운영자가 아님 482
 		if (!channels[channelName].isChanOp(currClient.getFd()))
 		{
-			// std::cout << "not chanop\n";
 			std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG;
 			pushResponse(currClient.getFd(), msg);
 			continue;

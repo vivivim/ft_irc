@@ -22,8 +22,8 @@ private:
 	bool						isInviteOnly;
 	bool						isTopicOprOnly;
 	bool						isLimit;
-	std::vector<int>	invitedPeople;
-	std::vector<int>	chanOpList; // 방장 닉네임 리스트
+	std::vector<int>			invitedPeople;
+	std::vector<int>			chanOpList;
 	std::string					createdTime;
 	bool						isExistTopic;
 

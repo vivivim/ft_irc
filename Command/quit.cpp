@@ -1,6 +1,5 @@
 #include "../Command/Command.hpp"
 #include "../Server/Server.hpp"
-
 #include <iostream>
 
 void	Server::quit(std::stringstream& ss, Client currClient)
@@ -27,12 +26,10 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 	std::vector<std::string>	removeCh;
 	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)
 	{
-		if (itChannel->second.IsUserInChannel(currClient.getFd())) //여기
+		if (itChannel->second.IsUserInChannel(currClient.getFd()))
 		{
 			sendMsgToChannelExceptMe(itChannel->second.getName(), msg, currClient);
 			itChannel->second.removeClient(currClient.getFd());
-			//remove from invitedPeople;
-			//remove from chanOpList;
 			if (!(itChannel->second.getMemberCount()))
 				removeCh.push_back(itChannel->second.getName());
 		}

@@ -12,7 +12,6 @@ class	Client {
 		std::string							prefix;
 		std::string							nick;
 		std::string							username;
-		// std::map<std::string, Channel>	channels;
 
 		bool								isPass;
 		bool								isUsername;

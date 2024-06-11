@@ -11,7 +11,7 @@ SRC = main.cpp \
 	  ./Client/Client.cpp \
 	  ./Channel/Channel.cpp \
 	  ./Response/Response.cpp \
-	  $(CMDDIR)nick.cpp $(CMDDIR)pass.cpp $(CMDDIR)user.cpp $(CMDDIR)join.cpp $(CMDDIR)topic.cpp $(CMDDIR)privmsg.cpp $(CMDDIR)invite.cpp $(CMDDIR)part.cpp $(CMDDIR)quit.cpp $(CMDDIR)ping.cpp $(CMDDIR)kick.cpp $(CMDDIR)mode.cpp
+	  $(CMDDIR)nick.cpp $(CMDDIR)pass.cpp $(CMDDIR)user.cpp $(CMDDIR)join.cpp $(CMDDIR)topic.cpp $(CMDDIR)privmsg.cpp $(CMDDIR)invite.cpp $(CMDDIR)part.cpp $(CMDDIR)quit.cpp $(CMDDIR)ping.cpp $(CMDDIR)kick.cpp $(CMDDIR)mode.cpp \
 
 BONUS_SRC = ./Bot/main.cpp \
 			./Bot/Bot.cpp

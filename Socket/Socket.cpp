@@ -6,9 +6,6 @@
 
 Socket::Socket()
 {
-//	this->socket = socket(AF_INET, SOCK_STREAM, 0);
-//	if (this->socket == -1)
-//		throw	std::runtime_error("Could not create socket");
 }
 
 Socket::~Socket()

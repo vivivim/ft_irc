@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <ctime>
 #include <sstream>
+#include <algorithm>
 #include "../Client/Client.hpp"
 
 Channel::Channel() : memberCount(0), isLock(false), isInviteOnly(false), isTopicOprOnly(false), isLimit(false)
@@ -61,6 +62,13 @@ bool	Channel::isChanOp(int fd)
 void	Channel::removeClient(int fd)
 {
 	clients.erase(fd);
+	std::vector<int>::iterator	it;
+	it = find(invitedPeople.begin(), invitedPeople.end(), fd);
+	if (it != invitedPeople.end())
+		invitedPeople.erase(it);
+	it = find(chanOpList.begin(), chanOpList.end(), fd);
+	if (it != chanOpList.end())
+		chanOpList.erase(it);
 	minusMemberCount();
 }
 

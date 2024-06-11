@@ -2,7 +2,6 @@
 #include "../Server/Server.hpp"
 #include <vector>
 #include <utility>
-
 #include <iostream>
 
 void Server::mode(std::stringstream& ss, Client &currClient)

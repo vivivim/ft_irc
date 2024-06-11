@@ -40,15 +40,13 @@ Bot::Bot(char *portStr, char *pwdChar)
 	std::string pwd = pwdChar;
 	msg = "PASS " + pwd + "\r\n";
 	if (send(botSocket, msg.c_str(), msg.size(), 0) < 0)
-	{
-		//실패 시 종료? 아니면 계속 시도? 어떻게?
-	}
+		throw	std::runtime_rror("Error: send failed");
 	msg = "NICK bot something\r\n";
 	if (send(botSocket, msg.c_str(), msg.size(), 0) < 0)
-		;
+		throw	std::runtime_rror("Error: send failed");
 	msg = "USER bot\r\n";
 	if (send(botSocket, msg.c_str(), msg.size(), 0) < 0)
-		;
+		throw	std::runtime_rror("Error: send failed");
 }
 
 Bot::~Bot()
@@ -93,12 +91,13 @@ void	Bot::run()
 	while (true)
 	{
 		char buf[512];
-		int n = read(botSocket, buf, sizeof(buf));
+		int n = recv(botSocket, buf, sizeof(buf), 0);
 		std::string	readMsg;
-		if (n < 0)
+		if (n <= 0)
 		{
-			throw	std::runtime_error("Error: Read failed");
-			break;
+			if (n < 0)
+				throw	std::runtime_error("Error: Read failed");
+			return ;
 		}
 		else
 			buf[n] = '\0';

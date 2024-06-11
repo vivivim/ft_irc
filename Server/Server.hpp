@@ -24,7 +24,6 @@ class	Server {
 		std::map<int, Client>			clients;
 		std::map<std::string, Channel>	channels;
 		std::queue<Response>			responses;
-		// time_t					createdTime;
 		
 		void	createNewChannel(Client& newbie, std::string channelName);
 		void	joinChannel(Client& newbie, std::string channelName);
