@@ -1,6 +1,4 @@
 #include "../Command/Command.hpp"
-#include "../Server/Server.hpp"
-#include "../Client/Client.hpp"
 #include <set>
 #include <iostream>
 

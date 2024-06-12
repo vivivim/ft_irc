@@ -1,6 +1,4 @@
-#include "../Server/Server.hpp"
-#include "../Utils/Macro.h"
-#include <sstream>
+#include "../Command/Command.hpp"
 
 void	Server::part(std::stringstream& ss, Client& currClient)
 {

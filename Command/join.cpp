@@ -1,5 +1,4 @@
 #include "../Command/Command.hpp"
-#include "../Server/Server.hpp"
 #include <iostream>
 
 void	Server::join(std::stringstream& ss, Client &currClient)

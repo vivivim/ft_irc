@@ -1,4 +1,3 @@
-#include "../Server/Server.hpp"
 #include "../Command/Command.hpp"
 
 void	Server::ping(std::stringstream& ss, Client currClient)

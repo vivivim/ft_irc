@@ -40,8 +40,6 @@ public:
 	void		addInvited(int fd);
 	bool		isChanOp(int fd);
 
-	void		clean();
-
 	void		plusMemberCount();
 	void		minusMemberCount();
 

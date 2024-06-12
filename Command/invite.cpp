@@ -1,6 +1,4 @@
 #include "../Command/Command.hpp"
-#include "../Server/Server.hpp"
-
 #include <iostream>
 
 void Server::invite(std::stringstream& ss, Client &currClient)

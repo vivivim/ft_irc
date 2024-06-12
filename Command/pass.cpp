@@ -1,7 +1,4 @@
 #include "../Command/Command.hpp"
-#include "../Server/Server.hpp"
-#include "../Client/Client.hpp"
-
 #include <iostream>
 
 void	Server::pass(std::stringstream& ss, Client& currClient)
