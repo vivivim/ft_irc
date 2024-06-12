@@ -39,6 +39,6 @@ void	Server::part(std::stringstream& ss, Client& currClient)
 
 	Channel&	currChannel = it->second;
 	currChannel.removeClient(currClient.getFd());
-	if (!currChannel.getMemberCount())
+	if (!currChannel.getMemberCount() || currChannel.isOnlyBot())
 		cleanChannel(channelName);
 }

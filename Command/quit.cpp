@@ -29,7 +29,7 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 		{
 			sendMsgToChannelExceptMe(itChannel->second.getName(), msg, currClient);
 			itChannel->second.removeClient(currClient.getFd());
-			if (!(itChannel->second.getMemberCount()))
+			if (!(itChannel->second.getMemberCount()) || itChannel->second.isOnlyBot())
 				removeCh.push_back(itChannel->second.getName());
 		}
 	}

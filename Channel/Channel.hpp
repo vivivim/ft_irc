@@ -39,6 +39,7 @@ public:
 	bool		IsUserInChannel(int fd);
 	void		addInvited(int fd);
 	bool		isChanOp(int fd);
+	bool		isOnlyBot();
 
 	void		plusMemberCount();
 	void		minusMemberCount();

@@ -59,6 +59,14 @@ bool	Channel::isChanOp(int fd)
 	return true;
 }
 
+bool	Channel::isOnlyBot()
+{
+	std::map<int, Client>::iterator	it = clients.begin();
+	if (getMemberCount() == 1 && it->second.getNick() == "bot")
+		return true;
+	return false;
+}
+
 void	Channel::removeClient(int fd)
 {
 	clients.erase(fd);

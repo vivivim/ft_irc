@@ -83,7 +83,7 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		sendMsgToChannel(channelName, msg);
 		channels[channelName].removeClient(getClientFdByNick(user));
 
-		if (!(channels[channelName].getMemberCount()))
+		if (!(channels[channelName].getMemberCount()) || channels[channelName].isOnlyBot())
 			cleanChannel(channelName);
 	}
 
