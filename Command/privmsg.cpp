@@ -40,7 +40,7 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 				continue ;
 			}
 			sendMsgToChannelExceptMe(dest, msg, currClient);
-			if (comment == "letsGoClimbing();")
+			if (comment == "letsGoClimbing();" && getClientFdByNick("bot") != -1)
 			{
 				std::cout << "소환!\n";
 				joinChannel(clients[getClientFdByNick("bot")], dest);
