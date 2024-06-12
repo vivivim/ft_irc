@@ -21,7 +21,7 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 
 	if (!reason.empty() && reason[0] == ':')
 		reason = reason.substr(1);
-	msg = ":" + currClient.getNick() + ADR + " QUIT :Quit: " + reason;
+	msg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " QUIT :Quit: " + reason;
 	std::map<std::string, Channel>::iterator	itChannel;
 	std::vector<std::string>	removeCh;
 	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)

@@ -70,7 +70,7 @@ void	Server::createNewChannel(Client& newbie, std::string channelName)
 	newChannel.setCreatedTime();
 	this->channels[channelName] = newChannel;
 	
-	std::string	msg = ":" + newbie.getNick() + ADR + " " + "JOIN " + channelName + "\r\n";
+	std::string	msg = ":" + newbie.getNick() + ADR + newbie.getIPaddr() + " " + "JOIN " + channelName + "\r\n";
 	msg += IL + " " + RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + newChannel.getClientList() + "\r\n";
 	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
 	pushResponse(newbie.getFd(), msg);
@@ -82,7 +82,7 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 	curr.addClient(newbie);
 	curr.plusMemberCount();
 
-	std::string	msg = ":" + newbie.getNick() + ADR + " " + "JOIN " + channelName + "\r\n";
+	std::string	msg = ":" + newbie.getNick() + ADR + newbie.getIPaddr() + " " + "JOIN " + channelName + "\r\n";
 	if (curr.getTopic() != "")
 	{
 		msg += IL + " " + RPL_TOPIC + " " + newbie.getNick() + " " + channelName + " :" + curr.getTopic() + "\r\n";
@@ -92,7 +92,7 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
 	pushResponse(newbie.getFd(), msg);
 
-	msg = ":" + newbie.getNick() + ADR + " JOIN :" + channelName + "\r\n\r\n";
+	msg = ":" + newbie.getNick() + ADR + newbie.getIPaddr() + " JOIN :" + channelName + "\r\n\r\n";
 	sendMsgToChannelExceptMe(channelName, msg, newbie);
 }
 

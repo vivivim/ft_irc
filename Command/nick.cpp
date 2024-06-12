@@ -68,7 +68,7 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	}
 
 	// user1!root@127.0.0.1 NICK :u
-	std::string msg = ":" + oldNick + ADR + " NICK :" + nick;
+	std::string msg = ":" + oldNick + ADR + currClient.getIPaddr() + " NICK :" + nick;
 	pushResponse(currClient.getFd(), msg);
 
 	std::cout << "success nick\n";

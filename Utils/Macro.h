@@ -6,7 +6,7 @@
 const std::string SERVER_NAME = "ircserv";
 
 const std::string IL = ":irc.local";
-const std::string ADR = "!root@127.0.0.1";
+const std::string ADR = "!root@";
 
 // WELCOME
 const std::string RPL_WELCOME = "001";

@@ -4,7 +4,7 @@ Client::Client()
 {
 }
 
-Client::Client(int socket, std::string msg) : fd(socket), msg(msg), prefix(""), nick("nickname"), isPass(false), isUsername(false), isNick(false), isConnected(false)
+Client::Client(int socket, std::string msg, std::string ip) : fd(socket), msg(msg), prefix(""), nick("nickname"), ip(ip), isPass(false), isUsername(false), isNick(false), isConnected(false)
 {
 }
 
@@ -29,5 +29,6 @@ std::string	Client::getPrefix() { return prefix; }
 bool		Client::getIsPass() { return isPass; }
 bool		Client::getIsUsername() { return isUsername; }
 std::string Client::getNick() { return nick; }
+std::string Client::getIPaddr() { return ip; }
 bool		Client::getIsNick() { return isNick; }
 bool		Client::getIsConnected() { return isConnected; }

@@ -29,7 +29,7 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 	for (size_t i = 0; i < dests.size(); ++i)
 	{
 		std::string dest = dests[i];
-		msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + dest + " :" + comment;
+		msg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " PRIVMSG " + dest + " :" + comment;
 
 		if (dest[0] == '#')
 		{
