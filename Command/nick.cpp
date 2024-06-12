@@ -65,9 +65,14 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 		return ;
 	}
 
-	// user1!root@127.0.0.1 NICK :u
 	std::string msg = ":" + oldNick + ADR + currClient.getIPaddr() + " NICK :" + nick;
-	pushResponse(currClient.getFd(), msg);
 
+	std::map<std::string, Channel>::iterator	itChannel;
+	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)
+	{
+	
+		if (itChannel->second.IsUserInChannel(currClient.getFd()))
+			sendMsgToChannel(itChannel->first, msg);
+	}
 	std::cout << "success nick\n";
 }
