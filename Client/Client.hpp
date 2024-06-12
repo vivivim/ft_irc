@@ -12,6 +12,7 @@ class	Client {
 		std::string							prefix;
 		std::string							nick;
 		std::string							username;
+		std::string							ip;
 
 		bool								isPass;
 		bool								isUsername;
@@ -20,7 +21,7 @@ class	Client {
 
 	public:
 		Client();
-		Client(int clientSocket, std::string msg);
+		Client(int clientSocket, std::string msg, std::string ip);
 		~Client();
 		
 		void		setMsg(std::string msg);
@@ -42,6 +43,7 @@ class	Client {
 		bool		getIsNick();
 		bool		getIsConnected();
  		std::string	getNick();
+		std::string	getIPaddr();
 };
 
 #endif

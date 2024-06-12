@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <sys/event.h>
 #include <sys/time.h>
+#include <arpa/inet.h>
 #include <fcntl.h>
 #include <cstdint>
 #include <stdexcept>
@@ -89,17 +90,28 @@ void	Server::run()
 
 void	Server::welcomeNewClient()
 {
-	int clientSocket = accept(socket.getSocket(), NULL, NULL);
+	sockaddr_in	clientAddr;
+    socklen_t clientAddrLen = sizeof(clientAddr);
+	int clientSocket = accept(socket.getSocket(), (struct sockaddr*)&clientAddr, &clientAddrLen);
 	if (clientSocket < 0)
 	{
 		std::cerr << "Client accept failed" << std::endl;
 		return ;
 	}
+
+	// 클라이언트 IP 주소 얻기
+    char clientIp[INET_ADDRSTRLEN];
+    if (inet_ntop(AF_INET, &clientAddr.sin_addr, clientIp, sizeof(clientIp)) == NULL)
+	{
+        std::cerr << "Get Client IP address failed" << std::endl;
+        return;
+    }
+
 	std::cout << "Accept client socket " << clientSocket << std::endl;
 	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
 	changeEvents(changeList, clientSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
 	changeEvents(changeList, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);
-	Client	freshClient(clientSocket, "");
+	Client	freshClient(clientSocket, "", clientIp);
 	clients[clientSocket] = freshClient;
 }
 
@@ -228,7 +240,7 @@ void	Server::sendWelcomeMsgToClient(Client& currClient)
 {
 	if (currClient.getIsPass() && currClient.getIsUsername() && currClient.getIsNick() && !currClient.getIsConnected())
 	{
-		std::string msg = IL + " " + RPL_WELCOME + " " + currClient.getNick() + " :Welcome to the Localnet IRC Network " + currClient.getNick() + ADR + "\r\n\r\n";
+		std::string msg = IL + " " + RPL_WELCOME + " " + currClient.getNick() + " :Welcome to the Localnet IRC Network " + currClient.getNick() + ADR + currClient.getIPaddr() + "\r\n\r\n";
 
 		currClient.setIsConnected(true);
 		pushResponse(currClient.getFd(), msg);

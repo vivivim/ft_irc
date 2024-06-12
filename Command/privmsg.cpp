@@ -28,7 +28,7 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 	for (size_t i = 0; i < dests.size(); ++i)
 	{
 		std::string dest = dests[i];
-		msg = ":" + currClient.getNick() + ADR + " PRIVMSG " + dest + " :" + comment;
+		msg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " PRIVMSG " + dest + " :" + comment;
 
 		if (dest[0] == '#')
 		{
@@ -39,7 +39,7 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 				continue ;
 			}
 			sendMsgToChannelExceptMe(dest, msg, currClient);
-			if (comment == "letsGoClimbing();")
+			if (comment == "letsGoClimbing();" && getClientFdByNick("bot") != -1)
 			{
 				std::cout << "소환!\n";
 				joinChannel(clients[getClientFdByNick("bot")], dest);

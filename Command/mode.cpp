@@ -160,7 +160,7 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	{
 		if (modeResult[i] != '+' && modeResult[i] != '-')
 		{
-			successMsg = ":" + currClient.getNick() + ADR + " MODE " + channelName + " " + modeResult + modeResultArg + "\r\n\r\n";
+			successMsg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " MODE " + channelName + " " + modeResult + modeResultArg + "\r\n\r\n";
 			break ;
 		}
 	}

@@ -34,7 +34,7 @@ void	Server::part(std::stringstream& ss, Client& currClient)
 		return ;
 	}
 	std::string	msg;
-	msg = ":" + currClient.getNick() + "!" + ADR + " PART " + channelName + " :" + comment;
+	msg = ":" + currClient.getNick() + "!" + ADR + currClient.getIPaddr() + " PART " + channelName + " :" + comment;
 	sendMsgToChannel(it->first, msg);
 
 	Channel&	currChannel = it->second;
