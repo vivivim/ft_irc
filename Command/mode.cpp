@@ -11,7 +11,7 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	if (!(ss >> channelName))
 		return ;
 
-	if (channelName[0] != '#') // 채널명이 아닌 경우(user mode가 오는 경우 방지)
+	if (channelName[0] != '#') // 채널명이 아닌 경우(user mode가 오는 경우 방지) -> 에러 응답을 해야하나..?
 		return ;
 
 	// 채널이 존재하지 않음 -> ERR_NOSUCHCHANNEL
@@ -142,14 +142,22 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 				msg += IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + user + " " + ERR_NOSUCHNICK_MSG + "\r\n";
 				continue ;
 			}
-			if (currChannel.isChanOp(currClient.getFd()) == plus || currChannel.IsUserInChannel(currClient.getFd())) // 권한을 변경할 필요가 없는 유저 또는 채널에 없는 유저
+			if (!currChannel.IsUserInChannel(getClientFdByNick(user))) // 채널에 없는 유저
+			{
+				std::string msg = IL + " " + ERR_USERNOTINCHANNEL + " " + currClient.getNick() + " " + user + " " + channelName + " " + ERR_USERNOTINCHANNEL_MSG;
+				pushResponse(currClient.getFd(), msg);
 				continue ;
-			if (plus)
-				currChannel.addOperator(currClient.getFd());
-			else
-				currChannel.removeOperator(currClient.getFd());
-			modeResult += "o";
-			modeResultArg += " :" + user;
+			}
+			// +이고 권한이 없던 사용자 || -이고 권한이 있던 사용자
+			if (plus != currChannel.isChanOp(getClientFdByNick(user)))
+			{
+				if (plus)
+					currChannel.addOperator(getClientFdByNick(user));
+				else
+					currChannel.removeOperator(getClientFdByNick(user));
+				modeResult += "o";
+				modeResultArg += " :" + user;
+			}
 		}
 		else // 알 수 없는 mode
 			msg += IL + " " + ERR_UNKNOWNMODE + " " + currClient.getNick() + " " + opString[i] + " " + ERR_UNKNOWNMODE_MSG + "\r\n";
