@@ -40,13 +40,13 @@ Bot::Bot(char *portStr, char *pwdChar)
 	std::string pwd = pwdChar;
 	msg = "PASS " + pwd + "\r\n";
 	if (send(botSocket, msg.c_str(), msg.size(), 0) < 0)
-		throw	std::runtime_rror("Error: send failed");
+		throw	std::runtime_error("Error: send failed");
 	msg = "NICK bot something\r\n";
 	if (send(botSocket, msg.c_str(), msg.size(), 0) < 0)
-		throw	std::runtime_rror("Error: send failed");
+		throw	std::runtime_error("Error: send failed");
 	msg = "USER bot\r\n";
 	if (send(botSocket, msg.c_str(), msg.size(), 0) < 0)
-		throw	std::runtime_rror("Error: send failed");
+		throw	std::runtime_error("Error: send failed");
 }
 
 Bot::~Bot()
@@ -135,18 +135,9 @@ void	Bot::introduceBotself(std::stringstream& ss)
 	msgSet.push_back(" : Send me a message in the format:            \r\n");
 	msgSet.push_back(" : #climb <Region: North, South, East, West>   \r\n");
 	msgSet.push_back(" : ex) #climb West                             \r\n");
-	msgSet.push_back(" :---------------------------------------------\r\n");
-	sendMsgSet(channelName, msgSet);
-	msgSet.clear();
-
-	msgSet.push_back(" :      __\r\n");
-	msgSet.push_back(" :  w  c(..)o   (\r\n");
-	msgSet.push_back(" :   \\__(-)    __)\r\n");
-	msgSet.push_back(" :       /\\   (\r\n");
-	msgSet.push_back(" :      /(_)___)\r\n");
-	msgSet.push_back(" :        /|\r\n");
-	msgSet.push_back(" :       | \\\r\n");
-	msgSet.push_back(" :       m  m\r\n");
+	msgSet.push_back(" :--------------------------------------------\r\n");
+	msgSet.push_back(" : |/\r\n");
+	msgSet.push_back(" :\\^_^/\r\n");
 	sendMsgSet(channelName, msgSet);
 }
 
@@ -163,7 +154,7 @@ void	Bot::parsingPrivmsg(std::stringstream& ss)
 		id.erase(0, 1);
 	if (id != "#climb")
 		return ;
-	
+
 	srand(static_cast<unsigned int>(time(0)));
 	int randNum = rand() % centerCnt;
 
