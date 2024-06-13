@@ -3,7 +3,19 @@
 #include <utility>
 #include <iostream>
 
-void Server::mode(std::stringstream& ss, Client &currClient)
+void	Server::userMode(std::stringstream& ss, Client &currClient)
+{
+	//currClient nick과 input이 다를 리는 없겠지?
+	//mode user는 입장 시 그때만 발생?
+	std::string	opInput;
+	if (!(ss >> opInput))
+		;
+	std::string	opMsg = " :" + opInput;
+	std::string	msg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " MODE " + currClient.getNick() + opMsg;
+	pushResponse(currClient.getFd(), msg);
+}
+
+void	Server::mode(std::stringstream& ss, Client &currClient)
 {
 	std::cout << "in mode\n";
 	
@@ -11,8 +23,11 @@ void Server::mode(std::stringstream& ss, Client &currClient)
 	if (!(ss >> channelName))
 		return ;
 
-	if (channelName[0] != '#') // 채널명이 아닌 경우(user mode가 오는 경우 방지) -> 에러 응답을 해야하나..?
+	if (channelName[0] != '#') // user mode
+	{
+		userMode(ss, currClient);
 		return ;
+	}
 
 	// 채널이 존재하지 않음 -> ERR_NOSUCHCHANNEL
 	if (channels.find(channelName) == channels.end())

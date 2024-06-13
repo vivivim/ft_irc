@@ -13,8 +13,11 @@
 
 class	Server {
 	private:
+		static Server*	instance;
+
 		int			port;
 		std::string	pwd;
+		bool		isRunning;
 
 		int								kq;
 		std::vector<struct kevent>		changeList;
@@ -32,6 +35,9 @@ class	Server {
 		Server();
 		Server(char *port, char *pwd);
 		~Server();
+
+		static void	signalHandler(int sigNum);
+		void		closeTheDoor();
 
 		void	create();
 		void	run();
@@ -64,6 +70,7 @@ class	Server {
 		void	ping(std::stringstream& ss, Client currClient);
 		void	kick(std::stringstream& ss, Client &currClient);
 		void	mode(std::stringstream& ss, Client &currClient);
+		void	userMode(std::stringstream& ss, Client &currClient);
 
 };
 //util

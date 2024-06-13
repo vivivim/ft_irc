@@ -70,7 +70,6 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	std::map<std::string, Channel>::iterator	itChannel;
 	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)
 	{
-	
 		if (itChannel->second.IsUserInChannel(currClient.getFd()))
 			sendMsgToChannel(itChannel->first, msg);
 	}

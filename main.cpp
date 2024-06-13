@@ -1,9 +1,11 @@
 #include "./Server/Server.hpp"
 #include <iostream>
 #include <stdexcept>
+#include <csignal>
 
 int	main(int argc, char **argv)
 {
+	signal(SIGINT, Server::signalHandler);
 	if (argc != 3)
 	{
 		std::cerr << "Follow this form --> ./ircserv <port> <password>" << std::endl;
