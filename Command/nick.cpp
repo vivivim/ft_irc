@@ -56,7 +56,7 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 			return ;
 		}
 	}
-
+	
 	currClient.setNick(nick);
 	currClient.setIsNick(true);
 	if (!currClient.getIsConnected())
@@ -74,6 +74,7 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	{
 		if (itChannel->second.IsUserInChannel(currClient.getFd())) // 해당 사용자가 있는 채널
 		{
+			itChannel->second.addClient(currClient); //채널 클래스의 클라이언트 목록도 갱신
 			std::map<int, Client> clientInChannel = itChannel->second.getClients();
 			std::map<int, Client>::iterator itClient;
 			for (itClient = clientInChannel.begin(); itClient != clientInChannel.end(); ++itClient) //해당 채널의 사용자 순회
