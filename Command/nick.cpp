@@ -67,11 +67,23 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 
 	std::string msg = ":" + oldNick + ADR + currClient.getIPaddr() + " NICK :" + nick;
 
+	std::set<int> connectedFd;
 	std::map<std::string, Channel>::iterator	itChannel;
+	connectedFd.insert(currClient.getFd());
 	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)
 	{
-		if (itChannel->second.IsUserInChannel(currClient.getFd()))
-			sendMsgToChannel(itChannel->first, msg);
+		if (itChannel->second.IsUserInChannel(currClient.getFd())) // 해당 사용자가 있는 채널
+		{
+			std::map<int, Client> clientInChannel = itChannel->second.getClients();
+			std::map<int, Client>::iterator itClient;
+			for (itClient = clientInChannel.begin(); itClient != clientInChannel.end(); ++itClient) //해당 채널의 사용자 순회
+				connectedFd.insert(itClient->first);
+		}
 	}
+	
+	std::set<int>::iterator itConnect;
+	for(itConnect = connectedFd.begin(); itConnect != connectedFd.end(); ++itConnect)
+		pushResponse(*itConnect, msg);
+
 	std::cout << "success nick\n";
 }
