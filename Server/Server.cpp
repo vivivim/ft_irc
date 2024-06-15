@@ -15,12 +15,15 @@
 #include <cstdint>
 #include <stdexcept>
 
+Server*	Server::instance = nullptr;
+
 Server::Server()
 {
 }
 
 Server::Server(char *port, char *pwd)
 {
+	instance = this;
 	std::istringstream	tmp(port);
 	if (tmp >> this->port)
 	{
@@ -39,15 +42,34 @@ Server::~Server()
 	for (it = clients.begin(); it != clients.end(); ++it)
 		close(it->second.getFd());
 	clients.clear();
+	close(socket.getSocket());
+}
+
+void	Server::signalHandler(int sigNum)
+{
+	(void)sigNum;
+	if (instance)
+		instance->closeTheDoor();
+}
+
+void	Server::closeTheDoor()
+{
+	std::map<int, Client>::iterator it;
+	for (it = clients.begin(); it != clients.end(); ++it)
+		close(it->second.getFd());
+	clients.clear();
+	close(socket.getSocket());
+	std::cout << "signal\n";
+	isRunning = false;
 }
 
 void	Server::create()
 {
-	this->socket.create();
-	socket.bind(this->port);
+	socket.create();
+	socket.bind(port);
 	socket.listen();
-	this->kq = kqueue();
-	if (this->kq == -1)
+	kq = kqueue();
+	if (kq == -1)
 		throw	std::runtime_error("kqueue() failed");
 	changeEvents(changeList, socket.getSocket(), EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
 }
@@ -57,17 +79,22 @@ void Server::changeEvents(std::vector<struct kevent>& changeList, uintptr_t iden
 	struct kevent tempEvent;
 	EV_SET(&tempEvent, ident, filter, flags, fflags, data, udata);
 	changeList.push_back(tempEvent);
+	isRunning = true;
 }
 
 void	Server::run()
 {
 	int newEvents;
 	struct kevent *currEvent;
-	while (1)
+	while (isRunning)
 	{
 		newEvents = kevent(kq, &changeList[0], changeList.size(), eventList, 8, NULL);
 		if (newEvents == -1)
+		{
+			if (errno == EINTR)
+				return ;
 			throw	std::runtime_error("kevent() failed");
+		}
 		changeList.clear();
 
 		for (int i = 0; i < newEvents; ++i)
@@ -126,7 +153,7 @@ void	Server::getClientMsg(int currFd)
 		{
 			if (n < 0)
 				std::cerr << "Error: Client socket has problem\n";
-			disconnectClient(currFd);
+			disconnectClient(it->second);
 		}
 		else
 		{
@@ -226,7 +253,7 @@ void	Server::sendResponseMsg()
 		if (n < 0)
 		{
 			std::cerr << "Error: Write failed\n";
-			disconnectClient(fd);
+			disconnectClient(clients.find(fd)->second);
 		}
 		else
 		{
@@ -248,10 +275,11 @@ void	Server::sendWelcomeMsgToClient(Client& currClient)
 	}
 }
 
-void	Server::disconnectClient(int key)
+void	Server::disconnectClient(Client currClient)
 {
-	close(key);
-	clients.erase(key);
+	std::string			msg = ":Lost terminal";
+	std::stringstream	ss(msg);
+	quit(ss, currClient);
 }
 
 void	Server::cleanChannel(std::string channelName)
