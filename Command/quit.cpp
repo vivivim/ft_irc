@@ -1,5 +1,6 @@
 #include "../Command/Command.hpp"
 #include <iostream>
+#include <unistd.h>
 
 void	Server::quit(std::stringstream& ss, Client currClient)
 {
@@ -36,5 +37,6 @@ void	Server::quit(std::stringstream& ss, Client currClient)
 	std::vector<std::string>::iterator it;
 	for (it = removeCh.begin(); it != removeCh.end(); ++it)
 		cleanChannel(*it);
-	disconnectClient(currClient.getFd());
+	close(currClient.getFd());
+	clients.erase(currClient.getFd());
 }

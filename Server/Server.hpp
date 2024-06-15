@@ -42,7 +42,7 @@ class	Server {
 		void	create();
 		void	run();
 		void	changeEvents(std::vector<struct kevent>& changeList, uintptr_t ident, int16_t filter, uint16_t flags, uint32_t fflags, intptr_t data, void *udata);
-		void	disconnectClient(int key);
+		void	disconnectClient(Client currClient);
 		void	cleanChannel(std::string input);
 
 		void	welcomeNewClient();

@@ -149,7 +149,7 @@ void	Server::getClientMsg(int currFd)
 		{
 			if (n < 0)
 				std::cerr << "Error: Client socket has problem\n";
-			disconnectClient(currFd);
+			disconnectClient(it->second);
 		}
 		else
 		{
@@ -249,7 +249,7 @@ void	Server::sendResponseMsg()
 		if (n < 0)
 		{
 			std::cerr << "Error: Write failed\n";
-			disconnectClient(fd);
+			disconnectClient(clients.find(fd)->second);
 		}
 		else
 		{
@@ -271,11 +271,11 @@ void	Server::sendWelcomeMsgToClient(Client& currClient)
 	}
 }
 
-void	Server::disconnectClient(int key)
+void	Server::disconnectClient(Client currClient)
 {
-	//quit을 거의 옮겨오면 될 듯?	
-	close(key);
-	clients.erase(key);
+	std::string			msg = ":Lost terminal";
+	std::stringstream	ss(msg);
+	quit(ss, currClient);
 }
 
 void	Server::cleanChannel(std::string channelName)
