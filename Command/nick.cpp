@@ -67,9 +67,9 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 
 	std::string msg = ":" + oldNick + ADR + currClient.getIPaddr() + " NICK :" + nick;
 
-	std::vector<int> connectedFd;
+	std::set<int> connectedFd;
 	std::map<std::string, Channel>::iterator	itChannel;
-	connectedFd.push_back(currClient.getFd());
+	connectedFd.insert(currClient.getFd());
 	for (itChannel = channels.begin(); itChannel != channels.end(); ++itChannel)
 	{
 		if (itChannel->second.IsUserInChannel(currClient.getFd())) // 해당 사용자가 있는 채널
@@ -77,19 +77,13 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 			std::map<int, Client> clientInChannel = itChannel->second.getClients();
 			std::map<int, Client>::iterator itClient;
 			for (itClient = clientInChannel.begin(); itClient != clientInChannel.end(); ++itClient) //해당 채널의 사용자 순회
-			{
-				if (find(connectedFd.begin(), connectedFd.end(), itClient->first) == connectedFd.end()) // 중복 방지
-					connectedFd.push_back(itClient->first);
-			}
+				connectedFd.insert(itClient->first);
 		}
 	}
 	
-	std::vector<int>::iterator itConnect;
+	std::set<int>::iterator itConnect;
 	for(itConnect = connectedFd.begin(); itConnect != connectedFd.end(); ++itConnect)
-	{
-		std::cout << "user : " << *itConnect << std::endl;
 		pushResponse(*itConnect, msg);
-	}
 
 	std::cout << "success nick\n";
 }
