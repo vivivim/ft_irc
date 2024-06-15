@@ -90,7 +90,11 @@ void	Server::run()
 	{
 		newEvents = kevent(kq, &changeList[0], changeList.size(), eventList, 8, NULL);
 		if (newEvents == -1)
+		{
+			if (errno == EINTR)
+				return ;
 			throw	std::runtime_error("kevent() failed");
+		}
 		changeList.clear();
 
 		for (int i = 0; i < newEvents; ++i)
