@@ -20,6 +20,9 @@ void	Socket::create()
 	socket = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (socket < 0)
 		throw	std::runtime_error("Could not create socket");
+	int opt = 1;
+	if (setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) 
+		throw	std::runtime_error("Could not set socket option");
 }
 
 void	Socket::bind(int port)
