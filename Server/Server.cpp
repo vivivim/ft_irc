@@ -59,7 +59,9 @@ void	Server::closeTheDoor()
 		close(it->second.getFd());
 	clients.clear();
 	close(socket.getSocket());
+	close(kq);
 	isRunning = false;
+	throw	std::runtime_error("\nclose server with signal");
 }
 
 void	Server::create()
