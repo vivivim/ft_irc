@@ -1,9 +1,7 @@
 #include "../Command/Command.hpp"
-#include <iostream>
 
 void Server::kick(std::stringstream& ss, Client &currClient)
 {
-	std::cout << "in kick\n";
 	std::string channelName;
 	if (!(ss >> channelName))
 	{
@@ -43,7 +41,6 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 	std::vector<std::string> users = split(userInput, ",");
 	for (size_t i = 0; i < users.size(); ++i)
 	{
-		std::cout << i << " : " << users[i] << std::endl;
 		std::string user = users[i];
 		// kick 당하는 닉네임의 클라이언트가 서버 자체에 존재하지 않음 401
 		if (getClientFdByNick(user) == -1)
@@ -79,13 +76,10 @@ void Server::kick(std::stringstream& ss, Client &currClient)
 		// kick 성공
 		// 채널 사람들이 받는 응답 메시지 :user!root@127.0.0.1 KICK #a yj :
 		std::string msg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " KICK " + channelName + " " + user + " :" + comment;
-		std::cout << msg << std::endl;
 		sendMsgToChannel(channelName, msg);
 		channels[channelName].removeClient(getClientFdByNick(user));
 
 		if (!(channels[channelName].getMemberCount()) || channels[channelName].isOnlyBot())
 			cleanChannel(channelName);
 	}
-
-	std::cout << "success kick\n";
 }

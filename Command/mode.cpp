@@ -1,14 +1,13 @@
 #include "../Command/Command.hpp"
 #include <vector>
 #include <utility>
-#include <iostream>
 
 bool	Server::useNoOpAndSendMsgInMode(Client currClient, Channel currChannel, std::string channelName)
 {
 	// 사용자에게 mode 변경 권한이 없음 -> ERR_CHANOPRIVSNEEDED(482) 
 	if (!currChannel.isChanOp(currClient.getFd()))
 	{
-		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG + "\r\n\r\n";
+		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG;
 		pushResponse(currClient.getFd(), msg);
 		return true;
 	}
@@ -17,8 +16,6 @@ bool	Server::useNoOpAndSendMsgInMode(Client currClient, Channel currChannel, std
 
 void	Server::mode(std::stringstream& ss, Client &currClient)
 {
-	std::cout << "in mode\n";
-	
 	std::string channelName;
 	if (!(ss >> channelName))
 		return ;
@@ -26,7 +23,7 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 	// 채널이름이 아니거나 존재하지 않는 채널이면 오류
 	if (channelName[0] != '#' || channels.find(channelName) == channels.end())
 	{
-		std::string msg = IL + " " + ERR_NOSUCHCHANNEL + " "+ channelName + " " + ERR_NOSUCHCHANNEL_MSG + "\r\n\r\n";
+		std::string msg = IL + " " + ERR_NOSUCHCHANNEL + " "+ channelName + " " + ERR_NOSUCHCHANNEL_MSG;
 		pushResponse(currClient.getFd(), msg);
 		return;
 	}
@@ -37,7 +34,7 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 	if (!(ss >> opString))
 	{
 		std::string msg = IL + " " + RPL_CHANNELMODEIS + " " + currClient.getNick() + " " + channelName + " " + currChannel.modeInfoToString() + "\r\n";
-		msg += IL + " " + RPL_CREATIONTIME + " " + currClient.getNick() + " " + channelName + " " + currChannel.getCreatedTime() + "\r\n\r\n";
+		msg += IL + " " + RPL_CREATIONTIME + " " + currClient.getNick() + " " + channelName + " " + currChannel.getCreatedTime();
 		pushResponse(currClient.getFd(), msg);
 		return ;
 	}
@@ -67,7 +64,6 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 				continue;
 			if (currChannel.getIsInviteOnly() != plus)
 			{
-				std::cout << "i\n";
 				currChannel.setIsInviteOnly(plus);
 				modeResult += "i";
 			}
@@ -78,7 +74,6 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 				continue;
 			if (currChannel.getIsTopicOprOnly() != plus)
 			{
-				std::cout << "t\n";
 				currChannel.setIsTopicOprOnly(plus);
 				modeResult += "t";
 			}
@@ -87,7 +82,6 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 		{
 			if (currChannel.getIsLock() != plus)
 			{
-				std::cout << "k\n";
 				if (plus) // 키를 새로 설정할 필요가 있으면 arg확인
 				{
 					if (j >= args.size())
@@ -110,7 +104,6 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 		}
 		else if (opString[i] == 'l') //채널 최대 인원 설정
 		{
-			std::cout << "l\n";
 			if (plus) // 최대 인원을 새로 설정할 필요가 있으면 arg확인
 			{
 				if (j >= args.size())
@@ -142,7 +135,6 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 		}
 		else if (opString[i] == 'o') //해당 닉네임 사용자에게 op권한 제공
 		{
-			std::cout << "o\n";
 			if (j >= args.size())
 			{
 				// 알맞은 arg가 필요하다는 오류 메시지
@@ -176,19 +168,17 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 		}
 		else // 알 수 없는 mode
 			msg += IL + " " + ERR_UNKNOWNMODE + " " + currClient.getNick() + " " + opString[i] + " " + ERR_UNKNOWNMODE_MSG + "\r\n";
-		std::cout << "modeResult : " << modeResult << std::endl;
 	}
 	std::string successMsg;
 	for (size_t i = 0; i < modeResult.length(); ++i)
 	{
 		if (modeResult[i] != '+' && modeResult[i] != '-')
 		{
-			successMsg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " MODE " + channelName + " " + modeResult + modeResultArg + "\r\n\r\n";
+			successMsg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " MODE " + channelName + " " + modeResult + modeResultArg;
 			break ;
 		}
 	}
 
-	pushResponse(currClient.getFd(), msg + "\r\n");
+	pushResponse(currClient.getFd(), msg);
 	sendMsgToChannel(channelName, successMsg);
-	std::cout << "success mode\n";
 }

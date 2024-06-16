@@ -1,5 +1,4 @@
 #include "../Command/Command.hpp"
-#include <iostream>
 
 void	Server::privmsg(std::stringstream& ss, Client currClient)
 {
@@ -40,10 +39,7 @@ void	Server::privmsg(std::stringstream& ss, Client currClient)
 			}
 			sendMsgToChannelExceptMe(dest, msg, currClient);
 			if (comment == "letsGoClimbing();" && getClientFdByNick("bot") != -1)
-			{
-				std::cout << "소환!\n";
 				joinChannel(clients[getClientFdByNick("bot")], dest);
-			}
 		}
 		else
 		{

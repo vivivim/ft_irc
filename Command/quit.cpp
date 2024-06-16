@@ -1,5 +1,4 @@
 #include "../Command/Command.hpp"
-#include <iostream>
 #include <unistd.h>
 
 void	Server::quit(std::stringstream& ss, Client currClient)

@@ -29,7 +29,6 @@ void	Server::join(std::stringstream& ss, Client &currClient)
 		{
 			if (it->second.getIsLock())
 			{
-				std::cout << it->second.getKey() << " " << keys[i] << std::endl;
 				if (i >= keys.size() || it->second.getKey() != keys[i])
 				{
 					std::string msg = IL + " " + ERR_BADCHANNELKEY + " " + currClient.getNick() + " " + chName + " " + ERR_BADCHANNELKEY_MSG;
@@ -71,7 +70,7 @@ void	Server::createNewChannel(Client& newbie, std::string channelName)
 	
 	std::string	msg = ":" + newbie.getNick() + ADR + newbie.getIPaddr() + " " + "JOIN " + channelName + "\r\n";
 	msg += IL + " " + RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + newChannel.getClientList() + "\r\n";
-	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
+	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.";
 	pushResponse(newbie.getFd(), msg);
 }
 
@@ -88,10 +87,10 @@ void	Server::joinChannel(Client& newbie, std::string channelName)
 		msg += IL + " " + RPL_TOPICWHOTIME + " " + newbie.getNick() + " " + channelName + " " + curr.getTopicWho() + " :" + curr.getTopicTime() + "\r\n";
 	}
 	msg += IL + " " + RPL_NAMREPLY + " " + newbie.getNick() + " = " + channelName + " :" + curr.getClientList() + "\r\n";
-	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.\r\n\r\n";
+	msg += IL + " " + RPL_ENDOFNAMES + " " + newbie.getNick() + " " + channelName + " :End of /NAMES list.";
 	pushResponse(newbie.getFd(), msg);
 
-	msg = ":" + newbie.getNick() + ADR + newbie.getIPaddr() + " JOIN :" + channelName + "\r\n\r\n";
+	msg = ":" + newbie.getNick() + ADR + newbie.getIPaddr() + " JOIN :" + channelName;
 	sendMsgToChannelExceptMe(channelName, msg, newbie);
 }
 

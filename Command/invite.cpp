@@ -1,9 +1,7 @@
 #include "../Command/Command.hpp"
-#include <iostream>
 
 void Server::invite(std::stringstream& ss, Client &currClient)
 {
-	std::cout << "in invite\n";
 	std::string invitedUser;
 	if (!(ss >> invitedUser)) // 무시
 		return ;
@@ -61,6 +59,4 @@ void Server::invite(std::stringstream& ss, Client &currClient)
 	// 피초대자가 받는 응답 메시지 -> user1!root@127.0.0.1 INVITE user3 :#b
 	msg = ":" + currClient.getNick() + ADR + " INVITE " + invitedUser + " :" + channelName;
 	pushResponse(getClientFdByNick(invitedUser), msg);
-	
-	std::cout << "success invite\n";
 }

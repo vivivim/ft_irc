@@ -1,10 +1,7 @@
 #include "../Command/Command.hpp"
-#include <iostream>
 
 void	Server::user(std::stringstream& ss, Client& currClient)
 {
-	std::cout << "in user\n";
-
 	if (!currClient.getIsPass())
 		return ;
 
@@ -28,5 +25,4 @@ void	Server::user(std::stringstream& ss, Client& currClient)
 
 	currClient.setUsername(input);
 	currClient.setIsUsername(true);
-	std::cout << "success user\n";
 }

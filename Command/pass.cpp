@@ -1,9 +1,7 @@
 #include "../Command/Command.hpp"
-#include <iostream>
 
 void	Server::pass(std::stringstream& ss, Client& currClient)
 {
-	std::cout << "in pass\n";
 	std::string	input;
 
 	if (currClient.getIsPass())
@@ -26,5 +24,4 @@ void	Server::pass(std::stringstream& ss, Client& currClient)
 		return ;
 	}
 	currClient.setIsPass(true);
-	std::cout << "success pass\n";
 }

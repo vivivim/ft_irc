@@ -59,7 +59,6 @@ void	Server::closeTheDoor()
 		close(it->second.getFd());
 	clients.clear();
 	close(socket.getSocket());
-	std::cout << "signal\n";
 	isRunning = false;
 }
 
@@ -160,7 +159,7 @@ void	Server::getClientMsg(int currFd)
 			buf[n] = '\0';
 			it->second.attachMsg(buf);
 		}
-		std::cout << it->second.getMsg() << std::endl;
+		std::cout << "receive msg: " << it->second.getMsg() << std::endl;
 		letsGoParsing(it->second);
 		sendWelcomeMsgToClient(it->second);
 	}
@@ -215,7 +214,7 @@ void	Server::sendMsgToChannel(std::string channelName, std::string msg)
 	{
 		if (channel.IsUserInChannel(it->second.getFd()))
 		{
-			std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
+			// std::cout << "fd: " << it->first << "\n send msg: " << msg << std::endl;
 			pushResponse(it->first, msg);
 		}
 	}
@@ -236,7 +235,7 @@ void	Server::sendMsgToChannelExceptMe(std::string channelName, std::string msg, 
 	{
 		if (channel.IsUserInChannel(it->second.getFd()) && it->second.getNick() != except.getNick())
 		{
-			std::cout << "fd: " << it->first << "\n msg: " << msg << std::endl;
+			// std::cout << "fd: " << it->first << "\n send msg: " << msg << std::endl;
 			pushResponse(it->first, msg);
 		}
 	}
@@ -257,7 +256,7 @@ void	Server::sendResponseMsg()
 		}
 		else
 		{
-			std::cout << responses.front().getMsg() << std::endl;
+			std::cout << "send msg: " << responses.front().getMsg() << std::endl;
 			responses.pop();
 		}
 	}
@@ -267,11 +266,10 @@ void	Server::sendWelcomeMsgToClient(Client& currClient)
 {
 	if (currClient.getIsPass() && currClient.getIsUsername() && currClient.getIsNick() && !currClient.getIsConnected())
 	{
-		std::string msg = IL + " " + RPL_WELCOME + " " + currClient.getNick() + " :Welcome to the Localnet IRC Network " + currClient.getNick() + ADR + currClient.getIPaddr() + "\r\n\r\n";
+		std::string msg = IL + " " + RPL_WELCOME + " " + currClient.getNick() + " :Welcome to the Localnet IRC Network " + currClient.getNick() + ADR + currClient.getIPaddr();
 
 		currClient.setIsConnected(true);
 		pushResponse(currClient.getFd(), msg);
-		std::cout << "send welcome\n";
 	}
 }
 

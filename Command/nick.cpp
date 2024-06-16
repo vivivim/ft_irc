@@ -4,8 +4,6 @@
 
 void Server::nick(std::stringstream& ss, Client &currClient)
 {
-	std::cout << "in nick\n";
-
 	if (!currClient.getIsPass())
 		return;
 
@@ -23,7 +21,6 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	{
 		if (!(ss >> botPwd) || botPwd != "something")
 		{
-			std::cout << botPwd << "\n";
 			std::string msg = IL + " " + ERR_ERRONEUSNICKNAME + " " + oldNick + " " + nick + " " + ERR_ERRONEUSNICKNAME_MSG;
 			pushResponse(currClient.getFd(), msg);
 			return;
@@ -85,6 +82,4 @@ void Server::nick(std::stringstream& ss, Client &currClient)
 	std::set<int>::iterator itConnect;
 	for(itConnect = connectedFd.begin(); itConnect != connectedFd.end(); ++itConnect)
 		pushResponse(*itConnect, msg);
-
-	std::cout << "success nick\n";
 }
