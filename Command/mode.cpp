@@ -15,6 +15,18 @@ void	Server::userMode(std::stringstream& ss, Client &currClient)
 	pushResponse(currClient.getFd(), msg);
 }
 
+bool	Server::useNoOpAndSendMsgInMode(Client currClient, Channel currChannel, std::string channelName)
+{
+	// 사용자에게 mode 변경 권한이 없음 -> ERR_CHANOPRIVSNEEDED(482) 
+	if (!currChannel.isChanOp(currClient.getFd()))
+	{
+		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG + "\r\n\r\n";
+		pushResponse(currClient.getFd(), msg);
+		return true;
+	}
+	return false;
+}
+
 void	Server::mode(std::stringstream& ss, Client &currClient)
 {
 	std::cout << "in mode\n";
@@ -48,14 +60,6 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 		return ;
 	}
 
-	// 사용자에게 mode 변경 권한이 없음 -> ERR_CHANOPRIVSNEEDED(482) 
-	if (!currChannel.isChanOp(currClient.getFd()))
-	{
-		std::string msg = IL + " " + ERR_CHANOPRIVSNEEDED + " " + currClient.getNick() + " " + channelName + " " + ERR_CHANOPRIVSNEEDED_MSG + "\r\n\r\n";
-		pushResponse(currClient.getFd(), msg);
-		return ;
-	}
-
 	std::vector<std::string> args;
 	std::string arg;
 	while (ss >> arg)
@@ -77,6 +81,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 		}
 		else if (opString[i] == 'i') //초대받은 사람만 입장 가능
 		{
+			if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
+				continue;
 			if (currChannel.getIsInviteOnly() != plus)
 			{
 				std::cout << "i\n";
@@ -86,6 +92,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 		}
 		else if (opString[i] == 't') //op만 TOPIC을 변경 가능
 		{
+			if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
+				continue;
 			if (currChannel.getIsTopicOprOnly() != plus)
 			{
 				std::cout << "t\n";
@@ -106,10 +114,14 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 						msg += IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_KEY + "\r\n";
 						continue;
 					}
+					if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
+						continue;
 					std::string newKey = args[j++];
 					currChannel.setKey(newKey);
 					modeResultArg += " " + currChannel.getKey();
 				}
+				if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
+					continue;
 				currChannel.setIsLock(plus);
 				modeResult += "k";
 			}
@@ -125,6 +137,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 					msg += IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_LIMIT + "\r\n";
 					continue;
 				}
+				if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
+					continue;
 				std::string limitStr = args[j++];
 				int newLimit = 0;
 				for (size_t i = 0; i < limitStr.length(); ++i)
@@ -139,6 +153,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 				currChannel.setLimits(newLimit);
 				modeResultArg += " " + currChannel.getlimitsToString(newLimit);
 			}
+			if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
+				continue;
 			currChannel.setIsLimit(plus);
 			modeResult += "l";
 		}
@@ -151,6 +167,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 				msg += IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_NICK + "\r\n";
 				continue;
 			}
+			if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
+				continue;
 			std::string user = args[j++];
 			if (getClientFdByNick(user) == -1) // 존재하지 않는 유저
 			{

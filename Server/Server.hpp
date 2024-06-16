@@ -71,7 +71,7 @@ class	Server {
 		void	kick(std::stringstream& ss, Client &currClient);
 		void	mode(std::stringstream& ss, Client &currClient);
 		void	userMode(std::stringstream& ss, Client &currClient);
-
+		bool	useNoOpAndSendMsgInMode(Client currClient, Channel currChannel, std::string channelName);
 };
 //util
 std::vector<std::string> split(const std::string& str, const std::string& delimiter);
