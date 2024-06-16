@@ -70,7 +70,6 @@ class	Server {
 		void	ping(std::stringstream& ss, Client currClient);
 		void	kick(std::stringstream& ss, Client &currClient);
 		void	mode(std::stringstream& ss, Client &currClient);
-		void	userMode(std::stringstream& ss, Client &currClient);
 		bool	useNoOpAndSendMsgInMode(Client currClient, Channel currChannel, std::string channelName);
 };
 //util

@@ -3,18 +3,6 @@
 #include <utility>
 #include <iostream>
 
-void	Server::userMode(std::stringstream& ss, Client &currClient)
-{
-	//currClient nick과 input이 다를 리는 없겠지?
-	//mode user는 입장 시 그때만 발생?
-	std::string	opInput;
-	if (!(ss >> opInput))
-		;
-	std::string	opMsg = " :" + opInput;
-	std::string	msg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " MODE " + currClient.getNick() + opMsg;
-	pushResponse(currClient.getFd(), msg);
-}
-
 bool	Server::useNoOpAndSendMsgInMode(Client currClient, Channel currChannel, std::string channelName)
 {
 	// 사용자에게 mode 변경 권한이 없음 -> ERR_CHANOPRIVSNEEDED(482) 
@@ -35,14 +23,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 	if (!(ss >> channelName))
 		return ;
 
-	if (channelName[0] != '#') // user mode
-	{
-		userMode(ss, currClient);
-		return ;
-	}
-
-	// 채널이 존재하지 않음 -> ERR_NOSUCHCHANNEL
-	if (channels.find(channelName) == channels.end())
+	// 채널이름이 아니거나 존재하지 않는 채널이면 오류
+	if (channelName[0] != '#' || channels.find(channelName) == channels.end())
 	{
 		std::string msg = IL + " " + ERR_NOSUCHCHANNEL + " "+ channelName + " " + ERR_NOSUCHCHANNEL_MSG + "\r\n\r\n";
 		pushResponse(currClient.getFd(), msg);
