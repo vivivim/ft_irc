@@ -87,7 +87,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 					if (j >= args.size())
 					{
 						// 알맞은 arg가 필요하다는 오류 메시지
-						msg += IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_KEY + "\r\n";
+						msg = IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_KEY;
+						pushResponse(currClient.getFd(), msg);
 						continue;
 					}
 					if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
@@ -109,7 +110,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 				if (j >= args.size())
 				{
 					// 알맞은 arg가 필요하다는 오류 메시지
-					msg += IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_LIMIT + "\r\n";
+					msg = IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_LIMIT;
+					pushResponse(currClient.getFd(), msg);
 					continue;
 				}
 				if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
@@ -138,7 +140,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 			if (j >= args.size())
 			{
 				// 알맞은 arg가 필요하다는 오류 메시지
-				msg += IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_NICK + "\r\n";
+				msg = IL + " " + ERR_INVALIDMODEPARAM + " " + currClient.getNick() + " " + channelName + ERR_INVALIDMODEPARAM_MSG_NICK;
+				pushResponse(currClient.getFd(), msg);
 				continue;
 			}
 			if (useNoOpAndSendMsgInMode(currClient, currChannel, channelName))
@@ -146,12 +149,13 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 			std::string user = args[j++];
 			if (getClientFdByNick(user) == -1) // 존재하지 않는 유저
 			{
-				msg += IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + user + " " + ERR_NOSUCHNICK_MSG + "\r\n";
+				msg = IL + " " + ERR_NOSUCHNICK + " " + currClient.getNick() + " " + user + " " + ERR_NOSUCHNICK_MSG;
+				pushResponse(currClient.getFd(), msg);
 				continue ;
 			}
 			if (!currChannel.IsUserInChannel(getClientFdByNick(user))) // 채널에 없는 유저
 			{
-				std::string msg = IL + " " + ERR_USERNOTINCHANNEL + " " + currClient.getNick() + " " + user + " " + channelName + " " + ERR_USERNOTINCHANNEL_MSG;
+				msg = IL + " " + ERR_USERNOTINCHANNEL + " " + currClient.getNick() + " " + user + " " + channelName + " " + ERR_USERNOTINCHANNEL_MSG;
 				pushResponse(currClient.getFd(), msg);
 				continue ;
 			}
@@ -167,7 +171,10 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 			}
 		}
 		else // 알 수 없는 mode
-			msg += IL + " " + ERR_UNKNOWNMODE + " " + currClient.getNick() + " " + opString[i] + " " + ERR_UNKNOWNMODE_MSG + "\r\n";
+		{
+			msg = IL + " " + ERR_UNKNOWNMODE + " " + currClient.getNick() + " " + opString[i] + " " + ERR_UNKNOWNMODE_MSG;
+			pushResponse(currClient.getFd(), msg);
+		}
 	}
 	std::string successMsg;
 	for (size_t i = 0; i < modeResult.length(); ++i)
@@ -175,10 +182,8 @@ void	Server::mode(std::stringstream& ss, Client &currClient)
 		if (modeResult[i] != '+' && modeResult[i] != '-')
 		{
 			successMsg = ":" + currClient.getNick() + ADR + currClient.getIPaddr() + " MODE " + channelName + " " + modeResult + modeResultArg;
+			sendMsgToChannel(channelName, successMsg);
 			break ;
 		}
 	}
-
-	pushResponse(currClient.getFd(), msg);
-	sendMsgToChannel(channelName, successMsg);
 }

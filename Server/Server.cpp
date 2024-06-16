@@ -159,7 +159,7 @@ void	Server::getClientMsg(int currFd)
 			buf[n] = '\0';
 			it->second.attachMsg(buf);
 		}
-		std::cout << "receive msg: " << it->second.getMsg() << std::endl;
+		std::cout << "recv msg: " << it->second.getMsg() << std::endl;
 		letsGoParsing(it->second);
 		sendWelcomeMsgToClient(it->second);
 	}
@@ -291,7 +291,7 @@ int		Server::getPort() { return port; }
 void	Server::pushResponse(int fd, std::string msg)
 {
 	Response response;
-	response.setMsg(msg + "\r\n");
+	response.setMsg(msg + "\r\n\r\n");
 	response.setFd(fd);
 	responses.push(response);
 }
